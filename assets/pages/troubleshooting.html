@@ -1,0 +1,48 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta name="viewport" content="width=320; user-scalable=no" />
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <title>Troubleshooting</title>
+	</head>
+  <body>
+    <div data-role="page" data-theme="a" id="intro">
+	  	<div data-role="header">
+	    	<h1>Troubleshooting</h1>
+		</div>
+	    <div data-role="content">
+	    <h3>How can I tell if my biosensor is connected and sending data to BioZen</h3>
+	    <p>Bluetooth connectivity is one of the most problematic areas you will encounter. <b>First make sure the biosensor in question has a fully charged battery.</b> </p>
+	    <p>Confirm that the biosensor shows up in the “Bluetooth Settings” page as accessed from the BioZen main menu. If the biosensor is listed but it says “Not enabled”, press the button to the right of the name of the biosensor to enable it. If the biosensor is not listed, follow the instructions in section 12, Connecting with Bluetooth Biosensors to make sure the biosensor is paired to the device.</p>
+	    <p>If all else fails try turning off Bluetooth in the mobile device’s Bluetooth Settings page, then turning it back on.</p>
+	    <p>Another fallback is to turn the mobile device off and back on</p>
+	    <hr />
+	    <h3>I can’t connect to a specific Bluetooth Device</h3>
+	    <p>These messages are presented when BioZen loses, and regains Bluetooth connectivity with a biosensor. These messages should include the Bluetooth name of the sensor, which is losing and regaining connection. First and foremost, make sure the biosensor in question has a fully charged battery. Biosensors with low batteries may tend to lose Bluetooth connectivity. </p>
+	    <p>Some devices may also have very limited transmitting range (battery life may affect this as well). Situating the sensor closer to the biosensor may help alleviate this issue. </p>
+	    <hr />
+	    <h3>I can’t get the signal strength indicator bars to turn green or show enough bars.</h3>
+	    <p>This applies to EEG (specifically the NeuroSky Mindset) biosensor only. First, make sure that the mindset headset is paired and connected and you are receiving data from it.</p>
+	    <p>The signal strength bars in the Meditation Screen can be interpreted as follows:</p>
+		<div data-role="collapsible-set">
+				<div data-role="collapsible" data-collapsed="true">
+					<h3>All Red Bars</h3>
+					<p>The bars showing up as Red means that the electrodes on the headset are not making proper skin contact. Try adjusting the headset and confirming that the electrodes on the ear pieces and forehead connecter have good skin contact. Wiping the electrodes with a little plain saline solution often helps ensure a good connection.  </p>
+				</div>
+				<div data-role="collapsible">
+					<h3>Some Green Bars</h3>
+					<p>Try adjusting the headset and confirming that the electrodes on the ear pieces and forehead connecter have good skin contact. Wiping the electrodes with a little plain saline solution often helps ensure a good connection.</p>
+				</div>
+				<div data-role="collapsible">
+					<h3>All Green Bars</h3>
+					<p>This means that the headset is connected and working properly.</p>
+				</div>
+				<div data-role="collapsible">
+					<h3>No Visible Bars</h3>
+					<p>When a meditation session is in progress the bars will be hidden from view if a good signal is being received. They will only show up if there is a problem with the signal connection.</p>
+				</div>
+		</div>
+		</div>
+	</div>
+  </body>
+</html>

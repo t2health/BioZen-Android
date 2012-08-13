@@ -1,0 +1,57 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta name="viewport" content="width=320; user-scalable=no" />
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <title>New Session</title>
+	</head>
+  <body>
+    <div data-role="page" data-theme="a" id="intro">
+	  	<div data-role="header">
+	    	<h1>New Session</h1>
+		</div>
+	    <div data-role="content">
+		    <h4>New Session - Recording Data</h4>
+			    <img src="../images/biozen_newsession_up_new.png" width="60px" height="60px" align="left" />
+			    	<p>Meditation sessions are started from the main screen by pressing the "New Session" button (above). </p>
+			    	<p>A "session" consists of a timed period where biosensors attached to the mobile device you are using will collect and record data which you can then use to assess the effectiveness of your meditation session afterward.</p>
+			    	<p>During this period, the biosensors will control a set of images (Preference Selections) on the screen designed to give feedback on your meditation session. The general goal is to make the images on the screen as bright as possible.</p>
+			    	<p>The default set of images is titled “Sunset”, which consists of the following three images:</p>
+			    	<h4>The Session Image</h4>
+			    	<p>The background image is static (even through biosensors may change, the background image always stays the same).</p>
+			    	<img src="../images/meditation_bg.png" width="200px" align="middle" />
+			    	<h4>The Background Image</h4>
+			    	<p>The background image is overlaid on top of the session image. Its intensity is controlled directly by one of the biosensors (by default it is controlled by the EEG parameter e-Meditation but can be changed via preferences). The stronger the signal of the selected parameter, in this case e-Meditation, the brighter the image gets.</p>
+			    	<p>The sum effect of the session image and the background image is that the stronger its selected parameter gets, the more the composite image looks like daytime – conversely the weaker its selected parameter gets, the more the composite image looks like nighttime.</p>
+			    	<img src="../images/eeg_layer.png" width="200px" align="middle" />
+			    	<h4>The Foreground Image </h4>
+			    	<p>The optional foreground image (See section 7 Preference Selections) is also overlaid op top of the session image.</p>
+			    	<p>Its intensity is also controlled by one of the biosensors (by default it is controlled by the skin temperature but can be changed via preferences) but in a different fashion than the background image is controlled. The intensity of the foreground image gets stronger when its selected parameter tends to stay the same and it gets weaker (or more transparent) as its selected parameter tends to make frequent changes.</p>
+			    	<img src="../images/breathing_rate.png" width="200px" align="middle" />
+			    	<hr>
+			    	<h4>The Session</h4>
+			    	<h5>Starting the session</h5>
+			    	<p>When you first a session a session startup screen will appear:</p>
+			    	<ol>
+			    		<li><b>EEG signal strength:</b> <img src="../images/signal_bars5.png"/></li>
+						<li><b>Screen images.</b>  Initially, all of the images that were configured for this session appear at full intensity – that way you get a good idea of all of the elements that might appear on the screen.</li>
+						<li><b>Start button.</b> Press this button when everything is set up and you are ready to go.</li>
+						<li><b>Prompt message.</b> If you have selected any EEG parameters you will be asked to adjust the EEG headset until the signal strength indicator at the top of the screen turns green and indicates a good signal connection (3 – 5 bars). If you have difficulty getting the indicator to turn from red to green or to get enough bars try adjusting the headset and its electrodes. Make sure that the electrodes have a good connection to your skin on your ear and on your forehead.  Wiping the electrodes with a little plain saline solution often helps ensure a good connection.</li> 
+			    	</ol>
+			    	<p>After you have established a good connection and pressed the start button all of the images except the main session image will fade out to transparent at which point they begin to be controlled by the selected parameters of the biosensors. At this point you should attempt to maximize the intensity of the background and (if configured) foreground images.</p>
+			    	<p>Note that during the session, the signal strength indicators (red/greed bars at the top right of the screen) will only be visible if they indicate a bad connection, otherwise they will be invisible.</p>
+			    	<p>At any time during the session you may touch anywhere on the screen to toggle on screen controls. When toggled you will see:</p>
+			    	<ul>
+			    		<li><b>Quit button.</b> Allows you to quit the session before the timer countdown reaches zero.</li>
+			    		<li><b>Timer countdown.</b>  Timer which indicates the amount of time remaining in the session.</li>
+			    	</ul>
+			    	<hr>
+			    	<h5>Ending the Session</h5>
+			    	<p>When the countdown timer reaches zero BioZen will playback a series of bells to notify you of the end of the session (alternatively you can end the session by pressing the "quit" button).</p>
+			    	<p>You will then be presented with the "End Session" screen. Here you are given the option to select a category for the session (Meditation, Breathing, Entertainment, and Working), and enter notes to be saved with the session.</p>
+			    	<p>Pressing "Save" will save the session so that you can review it later on. You may also press "Quit" to exit back to the home screen without saving, or press "Restart" to go return to the session (in case you pressed "Quit" before the end of the session).</p>
+			    	<img src="../images/biozen_meditation_save.png" width="200px" />
+		</div>
+	</div>
+  </body>
+</html>

@@ -1,0 +1,231 @@
+ Volume in drive E is RnD
+ Volume Serial Number is 783C-734D
+
+ Directory of E:\dev\RIM\AndroidBioZen
+
+07/12/2012  10:52 AM    <DIR>          .svn
+               0 File(s)              0 bytes
+
+ Directory of E:\dev\RIM\AndroidBioZen\assets
+
+06/20/2012  03:18 PM    <DIR>          .svn
+               0 File(s)              0 bytes
+
+ Directory of E:\dev\RIM\AndroidBioZen\assets\images
+
+06/20/2012  03:18 PM    <DIR>          .svn
+               0 File(s)              0 bytes
+
+ Directory of E:\dev\RIM\AndroidBioZen\assets\jquery.mobile
+
+06/20/2012  03:18 PM    <DIR>          .svn
+               0 File(s)              0 bytes
+
+ Directory of E:\dev\RIM\AndroidBioZen\assets\jquery.mobile\images
+
+06/20/2012  03:18 PM    <DIR>          .svn
+               0 File(s)              0 bytes
+
+ Directory of E:\dev\RIM\AndroidBioZen\assets\jquery.mobile\themes
+
+06/20/2012  03:18 PM    <DIR>          .svn
+               0 File(s)              0 bytes
+
+ Directory of E:\dev\RIM\AndroidBioZen\assets\jquery.mobile\themes\images
+
+06/20/2012  03:18 PM    <DIR>          .svn
+               0 File(s)              0 bytes
+
+ Directory of E:\dev\RIM\AndroidBioZen\assets\pages
+
+06/20/2012  03:18 PM    <DIR>          .svn
+               0 File(s)              0 bytes
+
+ Directory of E:\dev\RIM\AndroidBioZen\doc
+
+06/20/2012  03:18 PM    <DIR>          .svn
+               0 File(s)              0 bytes
+
+ Directory of E:\dev\RIM\AndroidBioZen\doc\index-files
+
+06/20/2012  03:18 PM    <DIR>          .svn
+               0 File(s)              0 bytes
+
+ Directory of E:\dev\RIM\AndroidBioZen\doc\resources
+
+06/20/2012  03:18 PM    <DIR>          .svn
+               0 File(s)              0 bytes
+
+ Directory of E:\dev\RIM\AndroidBioZen\doc\t2
+
+06/20/2012  03:18 PM    <DIR>          .svn
+               0 File(s)              0 bytes
+
+ Directory of E:\dev\RIM\AndroidBioZen\doc\t2\spine
+
+06/20/2012  03:18 PM    <DIR>          .svn
+               0 File(s)              0 bytes
+
+ Directory of E:\dev\RIM\AndroidBioZen\doc\t2\spine\communication
+
+06/20/2012  03:18 PM    <DIR>          .svn
+               0 File(s)              0 bytes
+
+ Directory of E:\dev\RIM\AndroidBioZen\doc\t2\spine\communication\android
+
+06/20/2012  03:18 PM    <DIR>          .svn
+               0 File(s)              0 bytes
+
+ Directory of E:\dev\RIM\AndroidBioZen\doc\t2\spine\communication\android\class-use
+
+06/20/2012  03:18 PM    <DIR>          .svn
+               0 File(s)              0 bytes
+
+ Directory of E:\dev\RIM\AndroidBioZen\gen
+
+06/20/2012  03:18 PM    <DIR>          .svn
+               0 File(s)              0 bytes
+
+ Directory of E:\dev\RIM\AndroidBioZen\lib
+
+06/20/2012  03:18 PM    <DIR>          .svn
+               0 File(s)              0 bytes
+
+ Directory of E:\dev\RIM\AndroidBioZen\libs
+
+06/20/2012  03:18 PM    <DIR>          .svn
+               0 File(s)              0 bytes
+
+ Directory of E:\dev\RIM\AndroidBioZen\res
+
+07/12/2012  10:52 AM    <DIR>          .svn
+               0 File(s)              0 bytes
+
+ Directory of E:\dev\RIM\AndroidBioZen\res\drawable
+
+06/20/2012  03:18 PM    <DIR>          .svn
+               0 File(s)              0 bytes
+
+ Directory of E:\dev\RIM\AndroidBioZen\res\drawable-hdpi
+
+06/20/2012  03:18 PM    <DIR>          .svn
+               0 File(s)              0 bytes
+
+ Directory of E:\dev\RIM\AndroidBioZen\res\drawable-ldpi
+
+06/20/2012  03:18 PM    <DIR>          .svn
+               0 File(s)              0 bytes
+
+ Directory of E:\dev\RIM\AndroidBioZen\res\drawable-mdpi
+
+06/20/2012  03:18 PM    <DIR>          .svn
+               0 File(s)              0 bytes
+
+ Directory of E:\dev\RIM\AndroidBioZen\res\layout
+
+06/25/2012  03:21 PM    <DIR>          .svn
+               0 File(s)              0 bytes
+
+ Directory of E:\dev\RIM\AndroidBioZen\res\layout-car
+
+06/20/2012  03:18 PM    <DIR>          .svn
+               0 File(s)              0 bytes
+
+ Directory of E:\dev\RIM\AndroidBioZen\res\layout-navexposed
+
+06/20/2012  03:18 PM    <DIR>          .svn
+               0 File(s)              0 bytes
+
+ Directory of E:\dev\RIM\AndroidBioZen\res\menu
+
+06/20/2012  03:18 PM    <DIR>          .svn
+               0 File(s)              0 bytes
+
+ Directory of E:\dev\RIM\AndroidBioZen\res\raw
+
+06/20/2012  03:18 PM    <DIR>          .svn
+               0 File(s)              0 bytes
+
+ Directory of E:\dev\RIM\AndroidBioZen\res\values
+
+06/20/2012  03:18 PM    <DIR>          .svn
+               0 File(s)              0 bytes
+
+ Directory of E:\dev\RIM\AndroidBioZen\res\xml
+
+07/12/2012  10:52 AM    <DIR>          .svn
+               0 File(s)              0 bytes
+
+ Directory of E:\dev\RIM\AndroidBioZen\resources
+
+06/20/2012  03:18 PM    <DIR>          .svn
+               0 File(s)              0 bytes
+
+ Directory of E:\dev\RIM\AndroidBioZen\src
+
+07/12/2012  10:52 AM    <DIR>          .svn
+               0 File(s)              0 bytes
+
+ Directory of E:\dev\RIM\AndroidBioZen\src\bz
+
+06/20/2012  03:18 PM    <DIR>          .svn
+               0 File(s)              0 bytes
+
+ Directory of E:\dev\RIM\AndroidBioZen\src\bz\org
+
+06/20/2012  03:18 PM    <DIR>          .svn
+               0 File(s)              0 bytes
+
+ Directory of E:\dev\RIM\AndroidBioZen\src\bz\org\t2health
+
+06/20/2012  03:18 PM    <DIR>          .svn
+               0 File(s)              0 bytes
+
+ Directory of E:\dev\RIM\AndroidBioZen\src\bz\org\t2health\lib
+
+06/20/2012  03:18 PM    <DIR>          .svn
+               0 File(s)              0 bytes
+
+ Directory of E:\dev\RIM\AndroidBioZen\src\bz\org\t2health\lib\activity
+
+06/20/2012  03:18 PM    <DIR>          .svn
+               0 File(s)              0 bytes
+
+ Directory of E:\dev\RIM\AndroidBioZen\src\bz\org\t2health\lib\analytics
+
+06/20/2012  03:18 PM    <DIR>          .svn
+               0 File(s)              0 bytes
+
+ Directory of E:\dev\RIM\AndroidBioZen\src\com
+
+07/12/2012  10:52 AM    <DIR>          .svn
+               0 File(s)              0 bytes
+
+ Directory of E:\dev\RIM\AndroidBioZen\src\com\t2
+
+07/12/2012  10:52 AM    <DIR>          .svn
+               0 File(s)              0 bytes
+
+ Directory of E:\dev\RIM\AndroidBioZen\src\com\t2\compassionDB
+
+06/20/2012  03:18 PM    <DIR>          .svn
+               0 File(s)              0 bytes
+
+ Directory of E:\dev\RIM\AndroidBioZen\src\com\t2\compassionMeditation
+
+07/12/2012  10:52 AM    <DIR>          .svn
+               0 File(s)              0 bytes
+
+ Directory of E:\dev\RIM\AndroidBioZen\src\com\t2\compassionUtils
+
+06/20/2012  03:18 PM    <DIR>          .svn
+               0 File(s)              0 bytes
+
+ Directory of E:\dev\RIM\AndroidBioZen\src\com\t2\filechooser
+
+06/20/2012  03:18 PM    <DIR>          .svn
+               0 File(s)              0 bytes
+
+     Total Files Listed:
+               0 File(s)              0 bytes
+              45 Dir(s)  47,908,007,936 bytes free

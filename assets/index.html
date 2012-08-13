@@ -1,0 +1,165 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta name="viewport" content="width=320; user-scalable=no" />
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <title>About BioZen</title>
+      <link rel="stylesheet" href="jquery.mobile/jquery.mobile.css" type="text/css" charset="utf-8" />
+	  <link rel="stylesheet" href="pgandjqm-style-override.css" type="text/css" charset="utf-8" />
+	  <link rel="stylesheet" href="jquery.mobile/themes/bio.min.css" type="text/css" />
+	  <script src="jquery.mobile/jquery-1.6.4.min"></script>	  
+	  <script src="main.js"></script>
+	  <script src="jquery.mobile/jquery.mobile.js"></script>
+	</head>
+  <body>
+    <div data-role="page" data-theme="a" id="intro">
+	  	<div data-role="header">
+	    	<h1>Getting Started</h1>	
+			<div data-role="navbar">
+				<ul>
+					<li><a href="#intro" class="ui-btn-active">Getting Started</a></li>
+					<li><a href="#uses">Meditation</a></li>
+					<li><a href="#devices">Devices</a></li>
+				</ul>
+			</div>
+		</div>
+	    <div data-role="content">
+	    	<p>BioZen aids in meditation by providing real-time biofeedback information to a user via data collected from various wireless biosensors. Biofeedback "sessions" may be saved for later reference and trend analysis. See Appendix A for compatible biosensor devices.</p>
+		   <h3>FAQ</h3>
+		   <hr />
+			<ul data-role="listview" data-theme="a">
+		    <li><a href="pages/newsession.html">New Session</a></li>
+		    <li><a href="pages/reviewsessions.html">Review Sessions</a></li>
+		    <li><a href="pages/liveview.html">Live Sessions</a></li>
+		    <li><a href="pages/connectingdevices.html">Connecting Devices</a></li>
+		   	<li> <a href="pages/preferences.html">Preferences</a></li>
+			<li><a href="pages/usermode.html">User Modes</a></li>
+			<li><a href="pages/troubleshooting.html">Troubleshooting</a></li>
+			</ul>
+			<br />
+			<div data-role="collapsible" data-content-theme="a" data-collapsed="true" >
+		    	<h1>Open Source Framework</h1>
+				<p>This app uses an open source framework called BSPAN - Bluetooth Sensor Processing for Android.</p>
+				<p>You can download, manipulate, and contribute at <a href="https://github.com/t2health/BSPAN---Bluetooth-Sensor-Processing-for-Android">GitHub</a>.</p>
+			</div>
+			<a href="mailto:mobileapps@t2health.org?subject=BioSound%20-%20" data-role="button" data-icon="mail_icon">Feedback</a>
+	    </div>
+    </div>
+    <div data-role="page" data-theme="a" id="uses">
+	  	<div data-role="header" data-add-back-btn="false">
+	    	<h1>Meditation</h1>	
+		<div data-role="navbar">
+			<ul>
+				<li><a href="#intro" data-direction="reverse">Getting Started</a></li>
+				<li><a href="#uses" class="ui-btn-active">Meditation</a></li>
+				<li><a href="#devices">Devices</a></li>
+			</ul>
+		</div><!-- /navbar -->
+		</div>
+	    <div data-role="content">
+	    	<h2>Mindfulness Meditation</h2>
+	    	<p>Band of interest: Theta</p>
+		    Mindfulness meditation is about focusing on what is happening around you and being aware of your thoughts and feelings during the process of meditating. Your mind should be open to your true feelings – there should be no judging of your thoughts. This is a common practice that Buddhist monks use as a way of self-awakening. </p>
+		    <h4>Instructions</h4>
+		    <ol>
+		    	<li>Get into a comfortable position and then fix your body still. </li>
+		    	<li>Let your eyes fall closed </li>
+		    	<li>Focus on your breath</li>
+		    	<li>Move your attention to the thoughts in your mind and the sounds and sights surrounding you. </li>
+		    	<li>Be aware of your elf and surroundings, try not to analyze or judge anything.</li>
+		    </ol>
+		    <p></p>
+		    <hr>
+		    <h2>Compassion Meditation</h2>
+				<p>Band of interest: Gamma</p>
+				<p>Compassion meditation produces a state in which love and compassion permeate the whole mind, with no other consideration, reasoning or discursive thoughts.   Compassion meditation produces a very specific feeling — a caring for the well-being of another living being, independent of approving or disapproving of them, or expecting anything in return.  Some report this feeling as a continuous <em>aha!</em> moment.</p>
+				<h4>Instructions</h4>
+				<ol>
+					<li>Get into a comfortable position and then fix your body still. </li>
+					<li>Let your eyes fall closed</li>
+					<li>Focus on your breath for a few moments, to get the mind settled. </li>
+					<li>Progressively cultivate loving-kindness towards:</li>
+					<ol>
+						<li>oneself</li>
+						<li>a good friend</li>
+						<li>a "neutral" person</li>
+						<li>a difficult person</li>
+						<li>all four of the above equally</li>
+						<li>and then gradually to all beings</li>
+					</ol>
+				</ol>
+		    <hr>
+		    <h2>Muscle Tension</h2>
+				<p>Muscles often tense when you feel stressed.</p>
+				<p>Listening to your muscle tension can help facilitate mindful meditation, serving as a reminder relax your muscles.</p>
+				<h4>Compatible Devices</h4>
+				<ul>
+					<li>Shimmer EMG sensor</li>
+				</ul>
+			<hr>	 
+		    <h2>Skin Resistance</h2>
+		    <h3>(GSR - Galvanic Skin Response)</h3>
+				<p>GSR detects when your palms sweat - a common sign of stress.</p>
+				<p>Sweaty palms is one of the fastest reactions to occur at the time of a stressor.</p>
+				<h4>Compatible Devices</h4>
+				<ul>
+					<li>Shimmer GSR sensor</li>
+				</ul>
+		</div>
+    </div>
+    
+    <div data-role="page" data-theme="a" id="devices">
+	  	<div data-role="header"  data-add-back-btn="false">
+	    	<h1>Compatible Devices</h1>	
+		<div data-role="navbar">
+			<ul>
+				<li><a href="#intro" data-direction="reverse">Getting Started</a></li>
+				<li><a href="#uses" data-direction="reverse">Meditation</a></li>
+				<li><a href="#devices" class="ui-btn-active">Devices</a></li>
+			</ul>
+		</div><!-- /navbar -->
+		</div>
+	    <div data-role="content">
+	    	<p>This application currently supports the following devices/sensors.</p>
+			<h3>NeuroSky MindSet</h3>
+			<p><a href="http://neurosky.com/Products/MindSet.aspx">NeuroSky Website</a></p>
+
+				<p><strong>Works with:</strong></p>
+				<ul>
+					<li>EEG</li>
+				</ul>
+				<center><img src="images/neurosky_mindset.png" class="border" /></center>
+			<hr>
+			<h3>Zephyr Bioharness BT</h3>
+				<p><a href="http://www.zephyr-technology.com/store/bioharness-research.html">Zephyr BioHarness Website</a></p>
+				<p><strong>Works with:</strong></p>
+				<ul>
+					<li>Heart Rate</li>
+				</ul>
+				<center><img src="images/zephyr.png" class="border" /></center>
+			<hr>
+			<h2>Shimmer</h2>
+			<p>Shimmer is a wireless modular sensor platform.  Each Shimmer mote, requires a base and Shimmer sensor that plugs in to the base. </p>
+			<hr>
+			<h3>Shimmer ECG Sensor</h3>
+				<p><strong>Works with:</strong></p>
+				<ul>
+					<li>Heart Rate</li>
+				</ul>
+				<p><a href="http://www.shimmer-research.com/p/products/sensor-units-and-modules/wireless-ecg-sensor">Shimmer ECG Sensor</a> <br /><a href="http://www.shimmer-research.com/p/products/sensor-units-and-modules/shimmer-wireless-sensor-unitplatform">Shimmer Base</a></p>
+				<center><img src="images/shimmer-ecg.png" class="border" /></center>
+			<hr>
+			<h3>Shimmer EMG Sensor</h3>
+				<p><strong>Works with:</strong></p><ul><li>Muscle Tension</li></ul>
+				<p><a href="http://www.shimmer-research.com/p/products/sensor-units-and-modules/wireless-emg-sensor">Shimmer EMG Sensor</a> <br /><a href="http://www.shimmer-research.com/p/products/sensor-units-and-modules/shimmer-wireless-sensor-unitplatform">Shimmer Base</a></p>
+				<center><img src="images/shimmer-emg.png" class="border" /></center>
+			<hr>
+			<h3>Shimmer GSR Sensor</h3>
+				<p><strong>Works with:</strong></p><ul><li>Skin Resistance (GSR - Galvanic Skin Response)</li></ul>
+				<p><a href="http://www.shimmer-research.com/p/products/sensor-units-and-modules/wireless-gsr-sensor">Shimmer GSR Sensor</a> <br /><a href="http://www.shimmer-research.com/p/products/sensor-units-and-modules/shimmer-wireless-sensor-unitplatform">Shimmer Base</a></p>
+				<center><img src="images/shimmer-gsr.png" class="border" /></center>
+		</div>    
+    </div>
+    
+  </body>
+</html>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:minHeight="50dip">
+	
+    
+	<LinearLayout
+		android:id="@+id/StatusIndicator"
+		android:gravity="center_vertical"
+		
+		android:background="@drawable/oval_red" 
+		android:layout_width="wrap_content"
+		android:layout_height="fill_parent"
+		android:minWidth="10dip"
+		android:layout_margin="10dip">
+	</LinearLayout>
+	
+
+		
+	<ImageButton 
+	    android:src="@drawable/tools_button" 
+		android:gravity="center_vertical"
+		android:id="@+id/buttonViewDetails" 
+		android:layout_width="wrap_content" 
+		android:layout_height="wrap_content"
+		android:focusable="false"
+		></ImageButton>	
+			
+	<TextView
+		android:id="@+id/text1"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:gravity="center_vertical"
+		android:textAppearance="@android:style/TextAppearance.Medium"
+		android:singleLine="true" android:text="Heart Rate" />
+	
+</LinearLayout>

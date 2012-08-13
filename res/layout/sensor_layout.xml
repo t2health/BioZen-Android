@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent" >
+    <RelativeLayout android:id="@+id/relativeLayout2" android:layout_width="wrap_content" android:layout_height="wrap_content">
+        <RelativeLayout
+            android:id="@+id/relativeLayoutECG"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/my_border"
+            android:gravity="left" >
+
+            <LinearLayout
+                android:id="@+id/HeartRateStatusIndicator"
+                android:layout_width="10dip"
+                android:layout_height="30dip"
+                android:layout_centerVertical="true"
+                android:background="@drawable/oval_red" >
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/imageButtonHeartRateTools"
+                android:layout_width="50dip"
+                android:layout_height="50dip"
+                android:layout_marginLeft="5dp"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/HeartRateStatusIndicator"
+                android:onClick="onButtonClick"
+                android:scaleType="fitXY"
+                android:src="@drawable/tools_button" />
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@+id/imageButtonHeartRateTools"
+                android:layout_centerVertical="true"
+                android:gravity="center_horizontal"
+                android:text="Heart Rate"
+                android:textColor="#ffffff"
+                android:textSize="20dip" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/relativeLayoutSkinTemp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/my_border"
+            android:gravity="left" >
+
+            <LinearLayout
+                android:id="@+id/SkinTempStatusIndicator"
+                android:layout_width="10dip"
+                android:layout_height="30dip"
+                android:layout_centerVertical="true"
+                android:background="@drawable/oval_red" >
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/imageButtonSkinTempTools"
+                android:layout_width="50dip"
+                android:layout_height="50dip"
+                android:layout_marginLeft="5dp"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/SkinTempStatusIndicator"
+                android:onClick="onButtonClick"
+                android:scaleType="fitXY"
+                android:src="@drawable/tools_button" />
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@+id/imageButtonSkinTempTools"
+                android:layout_centerVertical="true"
+                android:gravity="center_horizontal"
+                android:text="Skin Temp"
+                android:textColor="#ffffff"
+                android:textSize="20dip" />
+        </RelativeLayout>
+        
+    </RelativeLayout>
+
+
+</FrameLayout>

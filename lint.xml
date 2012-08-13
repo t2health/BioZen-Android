@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <issue id="ContentDescription">
+        <ignore path="res\layout\buddah_activity_layout.xml" />
+        <ignore path="res\layout\main_chooser_activity_layout_new.xml" />
+    </issue>
+    <issue id="HardcodedText">
+        <ignore path="res\layout\buddah_activity_layout.xml" />
+    </issue>
+    <issue id="TypographyEllipsis">
+        <ignore path="res\values\strings.xml" />
+    </issue>
+</lint>
