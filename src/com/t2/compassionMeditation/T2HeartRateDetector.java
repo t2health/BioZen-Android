@@ -1,5 +1,5 @@
 package com.t2.compassionMeditation;
-
+// not used right now
 import java.util.Arrays;
 
 
