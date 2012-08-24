@@ -1,5 +1,12 @@
 package com.t2.compassionMeditation;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -18,6 +25,8 @@ import org.achartengine.renderer.XYMultipleSeriesRenderer;
 import org.achartengine.renderer.XYSeriesRenderer;
 
 
+
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -26,10 +35,13 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -44,11 +56,18 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 import bz.org.t2health.lib.activity.BaseActivity;
 
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.Paragraph;
+import com.lowagie.text.pdf.BaseFont;
+import com.lowagie.text.pdf.PdfContentByte;
+import com.lowagie.text.pdf.PdfWriter;
 
 import com.t2.R;
 
@@ -266,6 +285,23 @@ public class ViewSessionsActivity extends BaseActivity
 		super.onStart();
 	}
 
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		this.getMenuInflater().inflate(R.menu.menu_review, menu);
+		return true;
+	}    
+    	
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == R.id.itemCreatePdf) {
+			CreatePdf();
+			return true;
+		} 
+		return true;
+
+	}	
+	
 	static class SessionsKeyItem {
 		public long id;
 		public String title1;
@@ -773,6 +809,153 @@ public class ViewSessionsActivity extends BaseActivity
 		
 		return new ArrayList<String>(Arrays.asList(idsStrArr));
 		
-	}		
+	}	
+	
+	
+	/**
+	 * Create a PDF file based on the contents of the graph
+	 */
+	void CreatePdf() {
+		if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+	        Document document = new Document();
+	        try {
+	        	PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(android.os.Environment.getExternalStorageDirectory() + java.io.File.separator + "HelloWorld.pdf"));
+	            document.open();
+				PdfContentByte contentByte = writer.getDirectContent();
+				BaseFont baseFont = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
+
+				float chartWidth = 332;
+				float chartHeight = 45;
+				int pdftop = 900;
+				int lineOffset = 160;
+				float spaceHeight = chartHeight + 30;
+				int horizontalPos = 180;
+				float verticalPos = (pdftop - lineOffset);	            
+				Date cal = Calendar.getInstance().getTime();
+				
+	            
+				contentByte.beginText();
+				contentByte.setFontAndSize(baseFont, 20);
+				contentByte.showTextAligned(PdfContentByte.ALIGN_CENTER, "T2 BioZen Report", 300, verticalPos+60, 0);
+				contentByte.showTextAligned(PdfContentByte.ALIGN_CENTER, "Generated on: " + cal.toLocaleString(), 300, verticalPos+30, 0);
+				contentByte.endText();				
+	            
+				contentByte.setLineWidth(1f);
+				verticalPos -= spaceHeight;				
+				long startTime = startCal.getTimeInMillis();
+				long endTime = endCal.getTimeInMillis();	
+				
+				float maxChartValue = 0;	            
+				float chartYAvg;
+
+				// Loop through all of the the keys
+
+				BioSession tmpSession = sessionItems.get(0);
+				int maxKeys = tmpSession.keyItemNames.length; 
+//				maxKeys = 2;
+				
+				for (int key = 0; key < maxKeys; key++) {
+					
+					//Draw a border rect
+					contentByte.setRGBColorStrokeF(0,0,0);
+					contentByte.setLineWidth(1f);
+					
+					contentByte.rectangle(horizontalPos, verticalPos, chartWidth, chartHeight);
+					contentByte.stroke();
+
+					contentByte.beginText();
+					contentByte.setFontAndSize(baseFont, 12);
+					BioSession tmpSession1 = sessionItems.get(0);
+					contentByte.showTextAligned(PdfContentByte.ALIGN_RIGHT, tmpSession1.keyItemNames[key], 170, (verticalPos+(chartHeight/2))-5, 0);
+					contentByte.endText();		
+					
+					
+					
+					maxChartValue = 0;				
+					// First find the max Y
+					for (BioSession session : sessionItems) {
+						if (session.time >= startTime && session.time <= endTime ) {
+							chartYAvg = session.avgFilteredValue[key];
+							if (chartYAvg > maxChartValue)  
+								maxChartValue = chartYAvg;
+						}
+					}						
+					
+					float lastY = -1;
+					float xIncrement = chartWidth / sessionItems.size();
+					float yIncrement = chartHeight / maxChartValue;
+					int lCount = 0;	
+					String keyName = "";
+					
+					// Loop through the session points of this key
+					String rawYValues = "";
+					for (BioSession session : sessionItems) {
+						keyName = session.keyItemNames[key];
+						if (session.time >= startTime && session.time <= endTime ) {
+							chartYAvg = session.avgFilteredValue[key];
+							rawYValues += chartYAvg + ", ";
+							if(lastY < 0) 
+								lastY = (float) chartYAvg;
+
+							contentByte.setLineWidth(3f);
+							contentByte.setRGBColorStrokeF(255,0,0);
+							
+//							float graphXFrom  = horizontalPos + (lCount * xIncrement);
+//							float graphYFrom = verticalPos + (lastY * yIncrement);
+//							float graphXTo  = (horizontalPos + ((lCount + 1) * xIncrement));
+//							float graphYTo =  verticalPos + (chartYAvg * yIncrement);
+							
+							contentByte.moveTo(horizontalPos + (lCount * xIncrement), verticalPos + (lastY * yIncrement));
+							contentByte.lineTo(horizontalPos + ((lCount + 1) * xIncrement), verticalPos + (chartYAvg * yIncrement));
+							contentByte.stroke();
+							
+							lCount++;
+							lastY = (float) chartYAvg;
+							
+							
+						}
+					}				
+					Log.e(TAG, keyName + ": [" + rawYValues + "]");
+					verticalPos -= spaceHeight;		
+			
+				
+				}
+				
+				
+				
+	            
+	            //document.add(new Paragraph("Hi there this is Fre1111111111111111111111111d"));
+	        } catch (DocumentException de) {
+	                System.err.println(de.getMessage());
+	                Log.e(TAG, de.toString());
+	        } catch (IOException ioe) {
+	                System.err.println(ioe.getMessage());
+	                Log.e(TAG, ioe.toString());
+	        } catch (Exception e) {
+	            System.err.println(e.getMessage());
+	            Log.e(TAG, e.toString());
+	        }
+
+	        // step 5: we close the document
+	        document.close();  	
+			
+			
+		}
+		else {
+			AlertDialog.Builder alertWarning = new AlertDialog.Builder(this);
+			alertWarning.setMessage("There is no SD card mounted, please insert SD card and try again");
+			alertWarning.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+			  public void onClick(DialogInterface dialog, int whichButton) {
+
+			  }
+
+			});
+
+			alertWarning.show();			
+		}
+		
+     
+		
+	}
 	
 }
