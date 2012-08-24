@@ -823,21 +823,20 @@ public class ViewSessionsActivity extends BaseActivity
 	            document.open();
 				PdfContentByte contentByte = writer.getDirectContent();
 				BaseFont baseFont = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
-
+				// Note top of PDF = 900
 				float chartWidth = 332;
 				float chartHeight = 45;
-				int pdftop = 900;
-				int lineOffset = 160;
+
 				float spaceHeight = chartHeight + 30;
 				int horizontalPos = 180;
-				float verticalPos = (pdftop - lineOffset);	            
+				float verticalPos = 780;	            
 				Date cal = Calendar.getInstance().getTime();
 				
 	            
 				contentByte.beginText();
 				contentByte.setFontAndSize(baseFont, 20);
-				contentByte.showTextAligned(PdfContentByte.ALIGN_CENTER, "T2 BioZen Report", 300, verticalPos+60, 0);
-				contentByte.showTextAligned(PdfContentByte.ALIGN_CENTER, "Generated on: " + cal.toLocaleString(), 300, verticalPos+30, 0);
+				contentByte.showTextAligned(PdfContentByte.ALIGN_CENTER, "T2 BioZen Report", 300, 800, 0);
+				contentByte.showTextAligned(PdfContentByte.ALIGN_CENTER, "Generated on: " + cal.toLocaleString(), 300, 770, 0);
 				contentByte.endText();				
 	            
 				contentByte.setLineWidth(1f);
@@ -882,8 +881,16 @@ public class ViewSessionsActivity extends BaseActivity
 					}						
 					
 					float lastY = -1;
-					float xIncrement = chartWidth / sessionItems.size();
-					float yIncrement = chartHeight / maxChartValue;
+					float xIncrement = 0;
+					if (sessionItems.size() > 0) {
+						xIncrement = chartWidth / sessionItems.size();
+					}
+					
+					float yIncrement = 0;
+					if (maxChartValue > 0) {
+						yIncrement = chartHeight / maxChartValue;
+					}
+
 					int lCount = 0;	
 					String keyName = "";
 					
@@ -900,11 +907,11 @@ public class ViewSessionsActivity extends BaseActivity
 							contentByte.setLineWidth(3f);
 							contentByte.setRGBColorStrokeF(255,0,0);
 							
-//							float graphXFrom  = horizontalPos + (lCount * xIncrement);
-//							float graphYFrom = verticalPos + (lastY * yIncrement);
-//							float graphXTo  = (horizontalPos + ((lCount + 1) * xIncrement));
-//							float graphYTo =  verticalPos + (chartYAvg * yIncrement);
-							
+							float graphXFrom  = horizontalPos + (lCount * xIncrement);
+							float graphYFrom = verticalPos + (lastY * yIncrement);
+							float graphXTo  = (horizontalPos + ((lCount + 1) * xIncrement));
+							float graphYTo =  verticalPos + (chartYAvg * yIncrement);
+//							Log.e(TAG, "[" + graphXFrom + ", " + graphYFrom + "] to [" + graphXTo + ", " + graphYTo + "]");
 							contentByte.moveTo(horizontalPos + (lCount * xIncrement), verticalPos + (lastY * yIncrement));
 							contentByte.lineTo(horizontalPos + ((lCount + 1) * xIncrement), verticalPos + (chartYAvg * yIncrement));
 							contentByte.stroke();
@@ -915,8 +922,13 @@ public class ViewSessionsActivity extends BaseActivity
 							
 						}
 					}				
-					Log.e(TAG, keyName + ": [" + rawYValues + "]");
+//					Log.e(TAG, keyName + ": [" + rawYValues + "]");
 					verticalPos -= spaceHeight;		
+					
+					if (verticalPos < 30) {
+						document.newPage();
+						verticalPos = 780 - spaceHeight;				
+					}
 			
 				
 				}
@@ -924,7 +936,7 @@ public class ViewSessionsActivity extends BaseActivity
 				
 				
 	            
-	            //document.add(new Paragraph("Hi there this is Fre1111111111111111111111111d"));
+	            //document.add(new Paragraph("You can also write stuff directly tot he document like this!"));
 	        } catch (DocumentException de) {
 	                System.err.println(de.getMessage());
 	                Log.e(TAG, de.toString());
