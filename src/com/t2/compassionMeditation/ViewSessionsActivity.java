@@ -75,6 +75,7 @@ import com.t2.compassionDB.BioSession;
 import com.t2.compassionDB.BioUser;
 import com.t2.compassionUtils.MathExtra;
 
+
 public class ViewSessionsActivity extends BaseActivity
 				implements OnItemLongClickListener, OnClickListener{
 	private static final String TAG = "BFDemo";
@@ -811,6 +812,35 @@ public class ViewSessionsActivity extends BaseActivity
 		
 	}	
 	
+	public RegressionResult calculateRegression(ArrayList<RegressionItem> inArray)
+	{
+		RegressionResult result = new RegressionResult();
+
+		int count = inArray.size();
+		double sumY = 0.0;
+		double sumX = 0.0;
+		double sumXY = 0.0;
+		double sumX2 = 0.0;
+		double sumY2 = 0.0;
+
+		for(int l=0;l<count;l++)
+		{
+			RegressionItem item = inArray.get(l);
+
+			sumX += item.xValue;
+			sumY += item.yValue;
+			sumXY += (item.xValue * item.yValue);
+			sumX2 += (item.xValue * item.xValue);
+			sumY2 += (item.yValue * item.yValue);
+		}
+
+		result.slope = ((count * sumXY) - sumX * sumY) / ((count * sumX2) - (sumX * sumX));
+		result.intercept = ((sumY - (result.slope * sumX))/count);
+		result.correlation = Math.abs((count * sumXY) - (sumX * sumY)) / (Math.sqrt((count * sumX2 - sumX * sumX) * (count * sumY2 - (sumY * sumY))));
+
+		return result;
+	}	
+	
 	
 	/**
 	 * Create a PDF file based on the contents of the graph
@@ -904,6 +934,8 @@ public class ViewSessionsActivity extends BaseActivity
 					int lCount = 0;	
 					String keyName = "";
 					
+					ArrayList<RegressionItem> ritems = new ArrayList<RegressionItem>();					
+					
 					// Loop through the session points of this key
 					String rawYValues = "";
 					for (BioSession session : sessionItems) {
@@ -921,10 +953,15 @@ public class ViewSessionsActivity extends BaseActivity
 							float graphYFrom = verticalPos + (lastY * yIncrement);
 							float graphXTo  = (horizontalPos + ((lCount + 1) * xIncrement));
 							float graphYTo =  verticalPos + (chartYAvg * yIncrement);
-//							Log.e(TAG, "[" + graphXFrom + ", " + graphYFrom + "] to [" + graphXTo + ", " + graphYTo + "]");
+							//							Log.e(TAG, "[" + graphXFrom + ", " + graphYFrom + "] to [" + graphXTo + ", " + graphYTo + "]");
+							// Draw the actual graph
 							contentByte.moveTo(graphXFrom, graphYFrom);
 							contentByte.lineTo(graphXTo, graphYTo);
 							contentByte.stroke();
+							
+							//Add regression Item
+							ritems.add(new RegressionItem(lCount, (chartYAvg*yIncrement)));							
+							
 							
 							if(chartYAvg > highValue)
 							{
@@ -959,6 +996,18 @@ public class ViewSessionsActivity extends BaseActivity
 					contentByte.showTextAligned(PdfContentByte.ALIGN_CENTER, hDate, highX, highY, 0);
 					contentByte.showTextAligned(PdfContentByte.ALIGN_CENTER, lDate, lowX, lowY, 0);
 					contentByte.endText();						
+					
+					//Draw Regression Line
+					RegressionResult regression = calculateRegression(ritems);
+					contentByte.saveState();
+					contentByte.setRGBColorStrokeF(0,0,250);
+					contentByte.setLineDash(3, 3, 0);
+					contentByte.moveTo(horizontalPos,verticalPos+(float)regression.intercept);
+					contentByte.lineTo(horizontalPos+chartWidth,(float) ((verticalPos+regression.intercept)+(float) (regression.slope * (chartWidth/xIncrement))));
+					contentByte.stroke();
+					contentByte.restoreState();
+					contentByte.setRGBColorStrokeF(0,0,0);					
+					
 					
 					//					Log.e(TAG, keyName + ": [" + rawYValues + "]");
 					// Get ready for the next key (and series of database points )
@@ -1008,5 +1057,26 @@ public class ViewSessionsActivity extends BaseActivity
      
 		
 	}
+	
+	
+	public class RegressionItem
+	{
+		public double xValue =0;
+		public double yValue =0;
+
+		RegressionItem(double xv, double yv)
+		{
+			xValue = xv;
+			yValue = yv;
+		}
+
+	}
+
+	public class RegressionResult
+	{
+		public double slope =0;
+		public double intercept =0;
+		public double correlation = 0;
+	}	
 	
 }
