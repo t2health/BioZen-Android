@@ -819,7 +819,12 @@ public class ViewSessionsActivity extends BaseActivity
 		if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
 	        Document document = new Document();
 	        try {
-	        	PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(android.os.Environment.getExternalStorageDirectory() + java.io.File.separator + "HelloWorld.pdf"));
+				Date calendar = Calendar.getInstance().getTime();
+				String filename = "BioZenResults_" ;
+				filename += (calendar.getYear() + 1900) + "-" + (calendar.getMonth() + 1) + "-" + calendar.getDate() + "_"; 
+				filename += calendar.getHours()+ "-" + calendar.getMinutes() + "-" + calendar.getSeconds() + ".pdf"; 
+
+	        	PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(android.os.Environment.getExternalStorageDirectory() + java.io.File.separator + filename));
 	            document.open();
 				PdfContentByte contentByte = writer.getDirectContent();
 				BaseFont baseFont = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
@@ -830,13 +835,12 @@ public class ViewSessionsActivity extends BaseActivity
 				float spaceHeight = chartHeight + 30;
 				int horizontalPos = 180;
 				float verticalPos = 780;	            
-				Date cal = Calendar.getInstance().getTime();
 				
-	            
+				// Write document header
 				contentByte.beginText();
 				contentByte.setFontAndSize(baseFont, 20);
 				contentByte.showTextAligned(PdfContentByte.ALIGN_CENTER, "T2 BioZen Report", 300, 800, 0);
-				contentByte.showTextAligned(PdfContentByte.ALIGN_CENTER, "Generated on: " + cal.toLocaleString(), 300, 770, 0);
+				contentByte.showTextAligned(PdfContentByte.ALIGN_CENTER, "Generated on: " + calendar.toLocaleString(), 300, 770, 0);
 				contentByte.endText();				
 	            
 				contentByte.setLineWidth(1f);
@@ -847,28 +851,24 @@ public class ViewSessionsActivity extends BaseActivity
 				float maxChartValue = 0;	            
 				float chartYAvg;
 
-				// Loop through all of the the keys
-
 				BioSession tmpSession = sessionItems.get(0);
 				int maxKeys = tmpSession.keyItemNames.length; 
-//				maxKeys = 2;
 				
+				// Loop through all of the the keys
 				for (int key = 0; key < maxKeys; key++) {
 					
 					//Draw a border rect
 					contentByte.setRGBColorStrokeF(0,0,0);
 					contentByte.setLineWidth(1f);
-					
 					contentByte.rectangle(horizontalPos, verticalPos, chartWidth, chartHeight);
 					contentByte.stroke();
 
+					// Write band name
 					contentByte.beginText();
 					contentByte.setFontAndSize(baseFont, 12);
 					BioSession tmpSession1 = sessionItems.get(0);
 					contentByte.showTextAligned(PdfContentByte.ALIGN_RIGHT, tmpSession1.keyItemNames[key], 170, (verticalPos+(chartHeight/2))-5, 0);
 					contentByte.endText();		
-					
-					
 					
 					maxChartValue = 0;				
 					// First find the max Y
@@ -891,6 +891,16 @@ public class ViewSessionsActivity extends BaseActivity
 						yIncrement = chartHeight / maxChartValue;
 					}
 
+					
+					float highValue= 0;
+					int highTime = 0;
+					float highY = 0;
+					float highX = 0;
+					int lowTime = 0;
+					float lowY = 100;
+					float lowX = chartWidth;
+					float lowValue = maxChartValue;					
+					
 					int lCount = 0;	
 					String keyName = "";
 					
@@ -912,17 +922,46 @@ public class ViewSessionsActivity extends BaseActivity
 							float graphXTo  = (horizontalPos + ((lCount + 1) * xIncrement));
 							float graphYTo =  verticalPos + (chartYAvg * yIncrement);
 //							Log.e(TAG, "[" + graphXFrom + ", " + graphYFrom + "] to [" + graphXTo + ", " + graphYTo + "]");
-							contentByte.moveTo(horizontalPos + (lCount * xIncrement), verticalPos + (lastY * yIncrement));
-							contentByte.lineTo(horizontalPos + ((lCount + 1) * xIncrement), verticalPos + (chartYAvg * yIncrement));
+							contentByte.moveTo(graphXFrom, graphYFrom);
+							contentByte.lineTo(graphXTo, graphYTo);
 							contentByte.stroke();
+							
+							if(chartYAvg > highValue)
+							{
+								highValue = chartYAvg;
+								highY = graphYTo;
+								highX = graphXTo;
+								highTime = (int) (session.time / 1000);
+							}
+
+							if(chartYAvg < lowValue)
+							{
+								lowValue = chartYAvg;
+								lowY = graphYTo;
+								lowX = graphXTo;
+								lowTime = (int) (session.time / 1000);
+							}							
+							
 							
 							lCount++;
 							lastY = (float) chartYAvg;
 							
 							
-						}
-					}				
-//					Log.e(TAG, keyName + ": [" + rawYValues + "]");
+						} // End if (session.time >= startTime && session.time <= endTime )
+					} // End for (BioSession session : sessionItems)				
+
+					//Draw high low dates
+					SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy");
+					String hDate = dateFormat.format(new Date((long) highTime * 1000L));
+					String lDate = dateFormat.format(new Date((long) lowTime * 1000L));
+					contentByte.beginText();
+					contentByte.setFontAndSize(baseFont, 8);
+					contentByte.showTextAligned(PdfContentByte.ALIGN_CENTER, hDate, highX, highY, 0);
+					contentByte.showTextAligned(PdfContentByte.ALIGN_CENTER, lDate, lowX, lowY, 0);
+					contentByte.endText();						
+					
+					//					Log.e(TAG, keyName + ": [" + rawYValues + "]");
+					// Get ready for the next key (and series of database points )
 					verticalPos -= spaceHeight;		
 					
 					if (verticalPos < 30) {
@@ -931,7 +970,7 @@ public class ViewSessionsActivity extends BaseActivity
 					}
 			
 				
-				}
+				} // End for (int key = 0; key < maxKeys; key++)
 				
 				
 				
