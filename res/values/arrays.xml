@@ -28,6 +28,7 @@
     <string-array name="filechooser_spinner_items">
         <item>Only Data Files</item>
         <item>Only LogCat Files</item>
+        <item>Only PDF Files</item>
         <item>All</item>
     </string-array>
 
