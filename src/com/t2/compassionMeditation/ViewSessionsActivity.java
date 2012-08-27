@@ -28,6 +28,7 @@ import org.achartengine.renderer.XYSeriesRenderer;
 
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -36,6 +37,8 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -86,6 +89,12 @@ public class ViewSessionsActivity extends BaseActivity
 	public static final String EXTRA_REVERSE_DATA = "reverseData";
 	private static final String KEY_NAME = "categories_";	
 
+	private static final int EXPORT_SUCCESS = 1;
+	private static final int EXPORT_FAILED = 0;
+	
+	
+	
+	private ProgressDialog mProgressDialog;	
 	
 	
 	private static ViewSessionsActivity instance;
@@ -222,6 +231,13 @@ public class ViewSessionsActivity extends BaseActivity
         monthNameTextView = (TextView) this.findViewById(R.id.monthName);
 
         
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        mProgressDialog.setMessage("Exporting data");
+        mProgressDialog.setCancelable(false);        
+        
+        
+        
         
         mCurrentBioUserName = SharedPref.getString(this, "SelectedUser", 	"");
 		sessionKeysList = (ListView) this.findViewById(R.id.listViewSessionKeys);
@@ -276,6 +292,31 @@ public class ViewSessionsActivity extends BaseActivity
 	}
 	
 	
+	private Handler fileExportCompleteHandler = new Handler() {
+		@Override
+		public void handleMessage(Message msg) {
+			// Hide the progress dialog.
+			hideProgressDialog();
+
+			if(msg.what == EXPORT_SUCCESS) {
+				//onDataExported(exportFileUris);
+			} else if(msg.what == EXPORT_FAILED) {
+				//onDataExportFailed();
+			}
+		}
+	};
+	
+	
+	protected void showProgressDialog() {
+		this.mProgressDialog.show();
+	}
+
+	protected void hideProgressDialog() {
+		this.mProgressDialog.hide();
+	}	
+
+	
+	
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
@@ -296,7 +337,24 @@ public class ViewSessionsActivity extends BaseActivity
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.itemCreatePdf) {
-			CreatePdf();
+		
+			if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+				showProgressDialog();
+				CreatePdf();
+			}
+			else {
+				AlertDialog.Builder alertWarning = new AlertDialog.Builder(this);
+				alertWarning.setMessage("There is no SD card mounted, please insert SD card and try again");
+				alertWarning.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+				  public void onClick(DialogInterface dialog, int whichButton) {
+
+				  }
+
+				});
+
+				alertWarning.show();			
+				
+			}
 			return true;
 		} 
 		return true;
@@ -846,7 +904,13 @@ public class ViewSessionsActivity extends BaseActivity
 	 * Create a PDF file based on the contents of the graph
 	 */
 	void CreatePdf() {
-		if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+		
+		// Run the export on a separate thread.
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+		
+		
 	        Document document = new Document();
 	        try {
 				Date calendar = Calendar.getInstance().getTime();
@@ -988,14 +1052,16 @@ public class ViewSessionsActivity extends BaseActivity
 					} // End for (BioSession session : sessionItems)				
 
 					//Draw high low dates
-					SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy");
-					String hDate = dateFormat.format(new Date((long) highTime * 1000L));
-					String lDate = dateFormat.format(new Date((long) lowTime * 1000L));
-					contentByte.beginText();
-					contentByte.setFontAndSize(baseFont, 8);
-					contentByte.showTextAligned(PdfContentByte.ALIGN_CENTER, hDate, highX, highY, 0);
-					contentByte.showTextAligned(PdfContentByte.ALIGN_CENTER, lDate, lowX, lowY, 0);
-					contentByte.endText();						
+					if (highY != 0 && lowY != 0) {
+						SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy");
+						String hDate = dateFormat.format(new Date((long) highTime * 1000L));
+						String lDate = dateFormat.format(new Date((long) lowTime * 1000L));
+						contentByte.beginText();
+						contentByte.setFontAndSize(baseFont, 8);
+						contentByte.showTextAligned(PdfContentByte.ALIGN_CENTER, hDate, highX, highY, 0);
+						contentByte.showTextAligned(PdfContentByte.ALIGN_CENTER, lDate, lowX, lowY, 0);
+						contentByte.endText();						
+					}
 					
 					//Draw Regression Line
 					RegressionResult regression = calculateRegression(ritems);
@@ -1038,22 +1104,11 @@ public class ViewSessionsActivity extends BaseActivity
 
 	        // step 5: we close the document
 	        document.close();  	
-			
+	        fileExportCompleteHandler.sendEmptyMessage(EXPORT_SUCCESS);			
 			
 		}
-		else {
-			AlertDialog.Builder alertWarning = new AlertDialog.Builder(this);
-			alertWarning.setMessage("There is no SD card mounted, please insert SD card and try again");
-			alertWarning.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-			  public void onClick(DialogInterface dialog, int whichButton) {
+		}).start();
 
-			  }
-
-			});
-
-			alertWarning.show();			
-		}
-		
      
 		
 	}
@@ -1078,5 +1133,7 @@ public class ViewSessionsActivity extends BaseActivity
 		public double intercept =0;
 		public double correlation = 0;
 	}	
+
+	
 	
 }
