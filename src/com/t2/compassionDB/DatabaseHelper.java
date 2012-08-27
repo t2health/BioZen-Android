@@ -10,6 +10,7 @@ import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
+import com.t2.compassionMeditation.Global;
 import com.t2.compassionMeditation.PreferenceData;
 
 /**
@@ -23,9 +24,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * Suggested Copy/Paste code. Everything from here to the done block.
 	 ************************************************/
 
-	private static final String DATABASE_NAME = "helloAndroid42.db";	
-	private static final int DATABASE_VERSION = 6;
-//	private static final int DATABASE_VERSION = 7;
 
 	private Dao<BioUser, Integer> bioUserDao = null;
 	private Dao<BioSession, Integer> bioSessionDao = null;
@@ -33,7 +31,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	
 
 	public DatabaseHelper(Context context) {
-		super(context, DATABASE_NAME, null, DATABASE_VERSION);
+		super(context, Global.Database.name, null, Global.Database.version);
 	}
 
 	/************************************************
