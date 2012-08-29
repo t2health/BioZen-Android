@@ -35,11 +35,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
+import android.text.format.DateFormat;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -55,11 +57,13 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import au.com.bytecode.opencsv.CSVWriter;
 import bz.org.t2health.lib.activity.BaseActivity;
 
 
@@ -77,6 +81,7 @@ import com.t2.R;
 import com.t2.compassionDB.BioSession;
 import com.t2.compassionDB.BioUser;
 import com.t2.compassionUtils.MathExtra;
+import com.t2.filechooser.FileChooser;
 
 
 public class ViewSessionsActivity extends BaseActivity
@@ -91,7 +96,7 @@ public class ViewSessionsActivity extends BaseActivity
 
 	private static final int EXPORT_SUCCESS = 1;
 	private static final int EXPORT_FAILED = 0;
-	
+	String mResultsFileName;	
 	
 	
 	private ProgressDialog mProgressDialog;	
@@ -300,8 +305,51 @@ public class ViewSessionsActivity extends BaseActivity
 
 			if(msg.what == EXPORT_SUCCESS) {
 				//onDataExported(exportFileUris);
+				AlertDialog.Builder alert1 = new AlertDialog.Builder(instance);
+				alert1.setMessage("Do you want to email the results?");
+
+				alert1.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+            			Uri uri = Uri.fromFile(new File(Environment.getExternalStorageDirectory(), mResultsFileName));        		
+                		
+                		Intent i = new Intent(Intent.ACTION_SEND);
+                		i.setType("text/plain");
+                		i.putExtra(Intent.EXTRA_EMAIL  , new String[]{"scott.coleman@tee2.org"});
+                		i.putExtra(Intent.EXTRA_SUBJECT, "session results: " + mResultsFileName);
+//                		i.putExtra(Intent.EXTRA_TEXT   , o.getName());
+                		i.putExtra(Intent.EXTRA_STREAM, uri);        		
+                		try {
+                		    startActivity(Intent.createChooser(i, "Send mail..."));
+                		} catch (android.content.ActivityNotFoundException ex) {
+                		    Toast.makeText(instance, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+                		}        		
+    		    		
+						
+					}
+				});
+
+				alert1.setNegativeButton("No", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+					}
+				});
+
+				alert1.show();					
+				
+				
+				
+				
+				
 			} else if(msg.what == EXPORT_FAILED) {
-				//onDataExportFailed();
+				AlertDialog.Builder alert1 = new AlertDialog.Builder(instance);
+				alert1.setMessage("Could not create results file");
+
+				alert1.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+					}
+				});
+
+				alert1.show();					
+
 			}
 		}
 	};
@@ -357,6 +405,33 @@ public class ViewSessionsActivity extends BaseActivity
 			}
 			return true;
 		} 
+		else if (item.getItemId() == R.id.itemCreateCsv) {
+				
+				if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+					showProgressDialog();
+					CreateCSV();
+				}
+				else {
+					AlertDialog.Builder alertWarning = new AlertDialog.Builder(this);
+					alertWarning.setMessage("There is no SD card mounted, please insert SD card and try again");
+					alertWarning.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+					  public void onClick(DialogInterface dialog, int whichButton) {
+
+					  }
+
+					});
+
+					alertWarning.show();			
+					
+				}
+				return true;
+			} 
+		
+		
+		
+		
+		
+		
 		return true;
 
 	}	
@@ -899,6 +974,127 @@ public class ViewSessionsActivity extends BaseActivity
 		return result;
 	}	
 	
+
+	/**
+	 * Create a PDF file based on the contents of the graph
+	 */
+	void CreateCSV() {
+		// Run the export on a separate thread.
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				Date calendar = Calendar.getInstance().getTime();
+				mResultsFileName = "BioZenResults_" ;
+				mResultsFileName += (calendar.getYear() + 1900) + "-" + (calendar.getMonth() + 1) + "-" + calendar.getDate() + "_"; 
+				mResultsFileName += calendar.getHours()+ "-" + calendar.getMinutes() + "-" + calendar.getSeconds() + ".csv"; 
+
+				
+				File outputFile = new File(android.os.Environment.getExternalStorageDirectory() + java.io.File.separator + mResultsFileName);
+				try {
+					CSVWriter writer = new CSVWriter(new FileWriter(outputFile, true));
+					
+					
+					
+					long startTime = startCal.getTimeInMillis();
+					long endTime = endCal.getTimeInMillis();	
+					
+					BioSession tmpSession = sessionItems.get(0);
+					int maxKeys = tmpSession.keyItemNames.length; 	
+					float chartYAvg;
+					
+					
+					SimpleDateFormat simpleDateFormat;
+					simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");			
+					String prettyStartDate = simpleDateFormat.format(startCal.getTime());					
+					String prettyEndDate = simpleDateFormat.format(endCal.getTime());					
+					writer.writeNext(new String[]{
+							"Start Date",
+							prettyStartDate,
+							"End Date",
+							prettyEndDate
+					});					
+					
+					ArrayList<String> lineArrayList = new ArrayList<String>();
+					// Loop through all of the the keys
+					for (int key = 0; key < maxKeys; key++) {
+						
+						String keyName = "";
+						lineArrayList.clear();
+
+						// Mke two passes at the session items. The first pass
+						// get's the times only and the second pass gets the values
+						
+						// Pass 1
+						int count = 0;
+						for (BioSession session : sessionItems) {
+							keyName = session.keyItemNames[key];
+							if (count++ == 0) {
+								lineArrayList.add(keyName + " times");
+							}
+
+							if (session.time >= startTime && session.time <= endTime ) {
+//								long time = session.time;
+//								Calendar cal = Calendar.getInstance();
+//								cal.setTimeInMillis(time);
+								SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yy HH:mm:ss", Locale.US);
+								String timePoint = sdf.format(new Date(session.time));			
+								
+							
+								lineArrayList.add(timePoint);
+							} // End if (session.time >= startTime && session.time <= endTime )
+						} // End for (BioSession session : sessionItems)	
+						String[] lineArray = (String[]) lineArrayList.toArray(new String[lineArrayList.size()]);
+						writer.writeNext(lineArray);
+						lineArrayList.clear();
+						
+						// Pass 2
+						count = 0;
+						for (BioSession session : sessionItems) {
+							keyName = session.keyItemNames[key];
+							if (count++ == 0) {
+								lineArrayList.add(keyName + " values");
+							}
+
+							if (session.time >= startTime && session.time <= endTime ) {
+								chartYAvg = session.avgFilteredValue[key];
+							
+								lineArrayList.add(Float.toString(chartYAvg));
+							} // End if (session.time >= startTime && session.time <= endTime )
+						} // End for (BioSession session : sessionItems)	
+						
+						
+//						tokensOnThisLine.toArray(new String[tokensOnThisLine.size()]);
+						
+						lineArray = (String[]) lineArrayList.toArray(new String[lineArrayList.size()]);
+						writer.writeNext(lineArray);
+						
+					}					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					writer.close();		
+			        fileExportCompleteHandler.sendEmptyMessage(EXPORT_SUCCESS);							
+					
+				} catch (IOException e) {
+					Log.e(TAG, e.toString());
+					fileExportCompleteHandler.sendEmptyMessage(EXPORT_FAILED);
+					e.printStackTrace();
+				}
+		
+			}		
+		}).start();
+		
+	}	
 	
 	/**
 	 * Create a PDF file based on the contents of the graph
@@ -914,11 +1110,11 @@ public class ViewSessionsActivity extends BaseActivity
 	        Document document = new Document();
 	        try {
 				Date calendar = Calendar.getInstance().getTime();
-				String filename = "BioZenResults_" ;
-				filename += (calendar.getYear() + 1900) + "-" + (calendar.getMonth() + 1) + "-" + calendar.getDate() + "_"; 
-				filename += calendar.getHours()+ "-" + calendar.getMinutes() + "-" + calendar.getSeconds() + ".pdf"; 
+				mResultsFileName = "BioZenResults_" ;
+				mResultsFileName += (calendar.getYear() + 1900) + "-" + (calendar.getMonth() + 1) + "-" + calendar.getDate() + "_"; 
+				mResultsFileName += calendar.getHours()+ "-" + calendar.getMinutes() + "-" + calendar.getSeconds() + ".pdf"; 
 
-	        	PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(android.os.Environment.getExternalStorageDirectory() + java.io.File.separator + filename));
+	        	PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(android.os.Environment.getExternalStorageDirectory() + java.io.File.separator + mResultsFileName));
 	            document.open();
 				PdfContentByte contentByte = writer.getDirectContent();
 				BaseFont baseFont = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);

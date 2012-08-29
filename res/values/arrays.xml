@@ -29,6 +29,7 @@
         <item>Only Data Files</item>
         <item>Only LogCat Files</item>
         <item>Only PDF Files</item>
+        <item>Only CSV Files</item>
         <item>All</item>
     </string-array>
 

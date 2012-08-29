@@ -1,7 +1,0 @@
-# cache for current jar dependecy. DO NOT EDIT.
-# format is <lastModified> <length> <SHA-1> <path>
-# Encoding is UTF-8
-1344878228696 765648 95400a7922ce75383866eb72f6ef4a7897923945 E:\dev\git\TouchDB-Android\TouchDB-Android\libs\jackson-mapper-asl-1.9.2.jar
-1344633830366 765648 95400a7922ce75383866eb72f6ef4a7897923945 E:\dev\RIM\T2AndroidLib1\libs\jackson-mapper-asl-1.9.2.jar
-1344878228651 228286 8493982bba1727106d767034bd0d8e77bc1931a9 E:\dev\git\TouchDB-Android\TouchDB-Android\libs\jackson-core-asl-1.9.2.jar
-1344633830358 228286 8493982bba1727106d767034bd0d8e77bc1931a9 E:\dev\RIM\T2AndroidLib1\libs\jackson-core-asl-1.9.2.jar
