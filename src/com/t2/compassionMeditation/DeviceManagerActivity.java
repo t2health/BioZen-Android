@@ -152,16 +152,37 @@ public class DeviceManagerActivity extends Activity
 			        	String device = SharedPref.getDeviceForParam(mInstance, name);			        	
 			        	if (device != null && which != 0) {
 							AlertDialog.Builder alertWarning = new AlertDialog.Builder(mInstance);
-
-							alertWarning.setMessage("Another sensor currently feeds this parameter. Please change this previous mapping before trying again/");
+							String message = String.format("Another sensor (%s) currently feeds this parameter. Please change this previous mapping before trying again", device );
+							alertWarning.setMessage(message);
 
 
 							alertWarning.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-							  public void onClick(DialogInterface dialog, int whichButton) {
-								  mParamChooserAlert.dismiss();
-							  }
+								  public void onClick(DialogInterface dialog, int whichButton) {
+									  mParamChooserAlert.dismiss();
+								  }
 
-							});
+								});
+							alertWarning.setNegativeButton("Ignore", new DialogInterface.OnClickListener() {
+								  public void onClick(DialogInterface dialog, int whichButton) {
+							        	Log.d(TAG, "param name = " + name + ", address = " + address);
+							        	if (which != 0) {
+							        		SharedPref.setParamForDevice(mInstance, name, address);
+									    	v.getBackground().setColorFilter(Color.GREEN, PorterDuff.Mode.MULTIPLY);		    	
+											((Button)v.findViewById(R.id.parameter)).setText(name);
+							        	}
+							        	else {
+							        		SharedPref.setParamForDevice(mInstance, name, address);
+									    	v.getBackground().setColorFilter(Color.LTGRAY, PorterDuff.Mode.MULTIPLY);
+											((Button)v.findViewById(R.id.parameter)).setText("Parameter");
+									    	
+							        	}
+								  
+								  
+								  
+								  
+								  }
+
+								});
 
 							alertWarning.show();
 			        		
