@@ -23,7 +23,9 @@
 	<string name="seekbarText">Meditate to keep the bar in the center</string>
 	<string name="select_users_text">Select User</string>
 	<string name="new_user_text">Add</string>
-	<string name="new_name_dialog">Enter new user name</string>
+    <string name="new_name_dialog">Enter new user name</string>
+    <string name="un_paused">Un-Paused</string>
+    <string name="paused">Running</string>
     
 <!-- Main Screen Buttons -->
     <string name="button_learn_how_to_meditate">Learn How to Meditate</string>
