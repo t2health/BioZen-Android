@@ -1156,6 +1156,7 @@ public class Graphs1Activity extends BaseActivity implements OnBioFeedbackMessag
 				if (mPaused == true) {
 					mPaused = false;
 					mPauseButton.getBackground().setColorFilter(Color.LTGRAY, PorterDuff.Mode.MULTIPLY);
+					mPauseButton.setText(R.string.button_running);
 					if (mLoggingEnabled) {
 						mDataOutHandler.logNote("Un-Paused"); // data header
 					}        
@@ -1166,6 +1167,7 @@ public class Graphs1Activity extends BaseActivity implements OnBioFeedbackMessag
 				else {
 					mPaused = true;
 					mPauseButton.getBackground().setColorFilter(0xFFFF0000, PorterDuff.Mode.MULTIPLY);
+					mPauseButton.setText(R.string.button_pause);
 					if (mLoggingEnabled) {
 						mDataOutHandler.logNote("Paused"); // data header
 					}

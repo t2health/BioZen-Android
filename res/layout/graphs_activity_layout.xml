@@ -24,7 +24,7 @@
     </LinearLayout>
     <LinearLayout android:layout_height="wrap_content" android:id="@+id/linearLayout1" android:layout_width="fill_parent">
         <Button android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/buttonAddMeasure" android:text="@string/button_add_measure" android:onClick="onButtonClick"></Button>
-        <Button android:layout_height="wrap_content" android:id="@+id/buttonPause" android:text="@string/button_pause" android:onClick="onButtonClick" android:layout_gravity="right" android:layout_width="fill_parent"></Button>
+        <Button android:layout_height="wrap_content" android:id="@+id/buttonPause" android:text="@string/button_running" android:onClick="onButtonClick" android:layout_gravity="right" android:layout_width="fill_parent"></Button>
     </LinearLayout>
     <TextView android:layout_height="wrap_content" android:id="@+id/measuresDisplayText" android:layout_width="wrap_content"></TextView>
     <TextView android:text="TextView" android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/textViewInfo"></TextView>
