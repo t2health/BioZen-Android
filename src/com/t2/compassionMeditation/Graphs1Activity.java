@@ -301,8 +301,9 @@ public class Graphs1Activity extends BaseActivity implements OnBioFeedbackMessag
         	mBioParameters.add(param);
         }
         
-        // Now create all of the potential dynamic GBraphBioParameters (GSR, EMG, ECG, HR, Skin Temp, Resp Rate
-    	String[] paramNamesStringArray = getResources().getStringArray(R.array.parameter_names);
+        // Now create all of the potential dynamic GBraphBioParameters (GSR, EMG, ECG, EEG, HR, Skin Temp, Resp Rate
+//    	String[] paramNamesStringArray = getResources().getStringArray(R.array.parameter_names);
+    	String[] paramNamesStringArray = getResources().getStringArray(R.array.parameter_names_less_eeg);
 
     	for (String paramName: paramNamesStringArray) {
         	if (paramName.equalsIgnoreCase("not assigned"))
@@ -432,7 +433,7 @@ public class Graphs1Activity extends BaseActivity implements OnBioFeedbackMessag
 		        		
 			        	try {
 			            	String[] tokens = lineToParse.split(",");
-			            	
+			              	
 			            	if (tokens.length == 7) { 
 				            	ShimmerData shimmerData = new ShimmerData(SPINEFunctionConstants.SHIMMER, SPINESensorConstants.SHIMMER_ECG_SENSOR, (byte) 0);
 				            	shimmerData.setFunctionCode(SPINEFunctionConstants.SHIMMER);
@@ -1104,11 +1105,11 @@ public class Graphs1Activity extends BaseActivity implements OnBioFeedbackMessag
 	{
 		 final int id = v.getId();
 		    switch (id) {
-		    case R.id.buttonBack:
-		    	finish();
-		    	
-		    	break;
-		    		    
+//		    case R.id.buttonBack:
+//		    	finish();
+//		    	
+//		    	break;
+//		    		    
 		    case R.id.buttonAddMeasure:
 		    	
 		    	boolean toggleArray[] = new boolean[mBioParameters.size()];

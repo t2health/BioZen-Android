@@ -12,6 +12,16 @@
         <item>Skin Temp</item>
         </string-array>
 
+    <string-array name="parameter_names_less_eeg">
+        <item>Not Assigned</item>
+        <item>GSR</item>
+        <item>EMG</item>
+        <item>ECG</item>
+        <item>Heart Rate</item>
+        <item>Resp Rate</item>
+        <item>Skin Temp</item>
+        </string-array>    
+    
         <string-array name="measure_select_dialog_items">
         <item>Delta</item>
         <item>Theta</item>

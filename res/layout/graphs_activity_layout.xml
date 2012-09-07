@@ -5,7 +5,6 @@
     android:layout_height="fill_parent">
     <ImageView android:layout_height="wrap_content" android:id="@+id/imageView2" android:layout_width="wrap_content" android:src="@drawable/biozen_pages_logo_new" android:paddingLeft="10dip" android:paddingRight="10dip"></ImageView>
     <RelativeLayout android:layout_width="fill_parent" android:id="@+id/relativeLayout1" android:layout_height="wrap_content">
-        <Button android:layout_width="wrap_content" android:text="@string/button_back" android:id="@+id/buttonBack" android:gravity="right" android:layout_height="wrap_content" android:onClick="onButtonClick"></Button>
         <ImageView android:layout_height="wrap_content" android:id="@+id/imageView1" android:layout_alignParentRight="true" android:layout_width="wrap_content" android:src="@drawable/signal_bars0"></ImageView>
     </RelativeLayout>
     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/seekbarText" android:text="@string/seekbarText" android:visibility="gone"></TextView>
