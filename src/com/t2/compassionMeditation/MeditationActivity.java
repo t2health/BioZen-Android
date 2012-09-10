@@ -107,7 +107,6 @@ public class MeditationActivity extends BaseActivity
 	
 	private String mAppId = "bioZenMeditation";
 	
-	
 	/**
 	 * Flag to set for manual debugging of activity (Shows values on screen
 	 */
@@ -174,6 +173,9 @@ public class MeditationActivity extends BaseActivity
      * Value 0 - 200 0 is best, 199 is worst, 200 is no connection 
      */
     private int mSigQuality = 200;
+
+	private int mPrevSigQuality = 0;	
+    
     
 	/**
 	 * Timer for updating the UI
@@ -417,8 +419,6 @@ public class MeditationActivity extends BaseActivity
 		mPauseButton.setVisibility(View.VISIBLE);
 		mSeekBar.setVisibility(View.INVISIBLE);
 		
-        ImageView image = (ImageView) findViewById(R.id.imageView1);
-        image.setImageResource(R.drawable.signal_bars0);  
         
         mBackgroundImage = (ImageView) findViewById(R.id.buddahView);
         mForegroundImage = (ImageView) findViewById(R.id.lotusView);
@@ -586,7 +586,19 @@ public class MeditationActivity extends BaseActivity
 		}
 		
 		mSignalImage.setImageResource(R.drawable.signal_bars0);
-		mSignalImage.setVisibility(View.VISIBLE);
+
+		// Check to see of there a device configured for EEG, if so then show the skin conductance meter
+		String tmp = SharedPref.getString(this, "EEG" ,null);		
+		
+		if (tmp != null) {
+			mSignalImage.setVisibility(View.VISIBLE);
+    		mTextViewInstructions.setVisibility(View.VISIBLE);
+			
+		}
+		else {
+			mSignalImage.setVisibility(View.INVISIBLE);
+    		mTextViewInstructions.setVisibility(View.INVISIBLE);
+		}
 		
 		
 		mDataOutHandler = new DataOutHandler(this, mUserId,mSessionId, mAppId );
@@ -968,6 +980,11 @@ public class MeditationActivity extends BaseActivity
 						else 
 							mSignalImage.setImageResource(R.drawable.signal_bars5);
 
+						if (mSigQuality == 200 && mPrevSigQuality != 200) {
+							Toast.makeText (getApplicationContext(), "Headset not makeing good skin contact. Please Adjust", Toast.LENGTH_LONG).show ();
+						}
+						mPrevSigQuality = mSigQuality;						
+						
 					}
 					
 					if (mindsetData.exeCode == Constants.EXECODE_SPECTRAL || mindsetData.exeCode == Constants.EXECODE_RAW_ACCUM) {

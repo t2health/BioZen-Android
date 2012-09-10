@@ -41,7 +41,7 @@
             
     </PreferenceCategory>
                 
-    <PreferenceCategory android:title="Parameter Preferences">
+    <PreferenceCategory android:title="Image Preferences">
                 
         <ListPreference
                 android:key="band_of_interest" android:entries="@array/bands_of_interest_array" android:entryValues="@array/bands_of_interest_arrayvalues" android:dialogTitle="Background image control" android:summary="Selects the parameter that will control the background image" android:title="Background image control"/>
@@ -49,6 +49,11 @@
         <ListPreference
                 android:key="parameter_of_interest" android:entries="@array/bands_of_interest_array" android:entryValues="@array/bands_of_interest_arrayvalues" android:dialogTitle="Foreground image control" android:title="Foreground image control" android:summary="Selects the parameter that will control the foreground image"/>
 
+        <EditTextPreference android:title="Image Intensity" android:key="alpha_gain" android:summary="Sets how strongly the band of interest will affect the background image intensity"></EditTextPreference>
+        <CheckBoxPreference
+                android:title="Image Intensity Visible" android:summary="Selects wheather or not the inage intensity slider will be visible in the meditation activity" android:defaultValue="true" android:key="show_a_gain"/>
+
+        
     </PreferenceCategory>
     
     <PreferenceCategory android:title="User Mode">
@@ -72,10 +77,6 @@
     
     <PreferenceCategory android:title="Advanced Preferences">
     
-        <EditTextPreference android:title="Alpha Gain" android:key="alpha_gain" android:summary="Sets how strongly the band of interest will affect the background image intensity"></EditTextPreference>
-        <CheckBoxPreference
-                android:title="Alpha Gain Visible" android:summary="Selects wheather or not the alpha gain slider will be visible in the meditation activity" android:defaultValue="true" android:key="show_a_gain"/>
-
         <ListPreference
                 android:key="sensor_sample_rate" android:entries="@array/sensor_sample_rate" android:entryValues="@array/sensor_sample_rate_values" android:dialogTitle="Shimmer sample rate" android:summary="Selects sample rate for shimmer devices" android:title="Shimmer sample rate"/>
         

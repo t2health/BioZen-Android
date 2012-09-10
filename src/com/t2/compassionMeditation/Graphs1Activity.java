@@ -92,7 +92,7 @@ public class Graphs1Activity extends BaseActivity implements OnBioFeedbackMessag
 	
 	private boolean mLogCatEnabled = true;
 	private boolean mLoggingEnabled = true;
-	
+	private int mPrevSigQuality = 0;
 
 	
 	/**
@@ -265,8 +265,23 @@ public class Graphs1Activity extends BaseActivity implements OnBioFeedbackMessag
         mTextInfoView = (TextView) findViewById(R.id.textViewInfo);
         mMeasuresDisplayText = (TextView) findViewById(R.id.measuresDisplayText);
         
+		// Don't actually show skin conductance meter unless we get samples
         ImageView image = (ImageView) findViewById(R.id.imageView1);
         image.setImageResource(R.drawable.signal_bars0);  
+        
+		// Check to see of there a device configured for EEG, if so then show the skin conductance meter
+		String tmp = SharedPref.getString(this, "EEG" ,null);		
+		
+		if (tmp != null) {
+	        image.setVisibility(View.VISIBLE);
+		}
+		else {
+	        image.setVisibility(View.INVISIBLE);
+		}
+		
+		        
+        
+        
         
 		// Initialize SPINE by passing the fileName with the configuration properties
 		try {
@@ -823,6 +838,11 @@ public class Graphs1Activity extends BaseActivity implements OnBioFeedbackMessag
 						image.setImageResource(R.drawable.signal_bars4);
 					else 
 						image.setImageResource(R.drawable.signal_bars5);
+					
+					if (sigQuality == 200 && mPrevSigQuality != 200) {
+						Toast.makeText (getApplicationContext(), "Headset not makeing good skin contact. Please Adjust", Toast.LENGTH_LONG).show ();
+					}
+					mPrevSigQuality = sigQuality;
 				}
 					
 				break;

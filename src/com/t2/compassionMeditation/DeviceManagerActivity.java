@@ -306,6 +306,9 @@ public class DeviceManagerActivity extends Activity
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		
+		if (deviceListAdapter != null) {
+			deviceListAdapter.reloadItems();
+		}		
 		switch(requestCode) {
 			case BLUETOOTH_SETTINGS:
 				break;

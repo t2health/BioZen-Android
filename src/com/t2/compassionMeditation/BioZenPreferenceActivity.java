@@ -179,7 +179,7 @@ public class BioZenPreferenceActivity extends PreferenceActivity implements OnSh
         	      
         	  }
         	  else {
-        	      Toast.makeText(this, key + " changed to " + value, Toast.LENGTH_LONG).show();
+        	      Toast.makeText(this, "Image Intensity changed to " + value, Toast.LENGTH_LONG).show();
         	  }
     	  }
       }
