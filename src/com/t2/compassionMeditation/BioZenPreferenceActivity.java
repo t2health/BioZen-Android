@@ -22,6 +22,7 @@ import com.t2.R;
 import com.t2.biofeedback.BioFeedbackService;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -29,11 +30,13 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceActivity;
+import android.util.Log;
 import android.widget.Toast;
 
 public class BioZenPreferenceActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener, OnPreferenceChangeListener{
     public static final String KEY_PREFERENCE = "change_user_mode_preference";
 
+	private static final String TAG = "BFDemo";    
     
     String existingSessionLength;    
     String existingAlphaGain;    
@@ -126,15 +129,28 @@ public class BioZenPreferenceActivity extends PreferenceActivity implements OnSh
     	String mobiName = SharedPref.getString(this, "mobi_sensor", "");
     	String spineName = SharedPref.getString(this, "spine_sensor", "");        
         
-        String APP_SHARED_PREFS = "com.t2.compassionMeditation.BTNAMES";         
-        SharedPreferences myPrefs = this.getSharedPreferences(APP_SHARED_PREFS, MODE_WORLD_READABLE);
-        SharedPreferences.Editor prefsEditor = myPrefs.edit();
-        prefsEditor.putString("shimmer_sensor", shimmerName);
-        prefsEditor.putString("zephyr_sensor", zephyrName);
-        prefsEditor.putString("neurosky_sensor", neuroskyName);
-        prefsEditor.putString("mobi_sensor", mobiName);
-        prefsEditor.putString("spine_sensor", spineName);
-        prefsEditor.commit();            
+
+    	try {
+
+//            String APP_SHARED_PREFS = "com.t2.compassionMeditation.BTNAMES";         
+//            SharedPreferences myPrefs = this.getSharedPreferences(APP_SHARED_PREFS, MODE_WORLD_READABLE);
+
+    		Context otherAppsContext = this.createPackageContext("com.t2",0);
+    		SharedPreferences myPrefs = otherAppsContext.getSharedPreferences("com.t2.compassionMeditation.BTNAMES", Context.MODE_WORLD_READABLE);
+    		
+            
+            SharedPreferences.Editor prefsEditor = myPrefs.edit();
+            prefsEditor.putString("shimmer_sensor", shimmerName);
+            prefsEditor.putString("zephyr_sensor", zephyrName);
+            prefsEditor.putString("neurosky_sensor", neuroskyName);
+            prefsEditor.putString("mobi_sensor", mobiName);
+            prefsEditor.putString("spine_sensor", spineName);
+            prefsEditor.commit();            
+    	} 
+    	catch (Exception e) {
+    		Log.e(TAG, e.toString());
+    	}          
+        
         
 		super.onStop();
 	}

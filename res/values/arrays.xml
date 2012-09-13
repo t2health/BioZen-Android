@@ -101,9 +101,10 @@
     <string-array name="image_selection_array">
         <item>Buddah</item>
         <item>Sunset</item>
-        <!-- 
+        <!--
+        
         <item>Bob</item>
-         -->
+        -->
     </string-array>
 
 </resources>
