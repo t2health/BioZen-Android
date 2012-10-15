@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
-    <item android:id="@+id/itemCreatePdf" android:title="Create PDF" android:enabled="true" android:titleCondensed="Create PDF"></item>
-        <item android:id="@+id/itemCreateCsv" android:title="Create CSV" android:enabled="true" android:titleCondensed="Create CSV"></item>
-    
-
-</menu>

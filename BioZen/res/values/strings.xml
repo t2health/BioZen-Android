@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="biozen">BioZen</string>
+    <string name="hello">Hello World, AndroidSpineServerMainActivity!</string>
+    <string name="app_name">BioZen</string>
+    <string name="StatusLogLabelText">Status/Log</string>
+    <string name="discoverbutton">DiscoverAndStart</string>
+	<string name="chart_high">Hi</string>
+	<string name="chart_low">Lo</string>
+    <string name="alert_dialog_measure_selector">Select Measures to graph</string>	
+    
+	<!--  Graph results -->
+	<string name="results_title">Results</string>
+	<string name="groups_tab">Categories</string>
+	<string name="scales_tab">Scales</string>
+	<string name="notes_tab">Notes</string>
+	<string name="alert_dialog_ok">Ok</string>
+	<string name="alert_dialog_cancel">Cancel</string>
+    <string name="button_running">Running - Press to pause</string>
+	<string name="button_pause">Paused - Press to resume</string>
+    <string name="button_add_measure">Add Measure</string>
+	<string name="button_back">Back</string>
+	<string name="seekbarText">Meditate to keep the bar in the center</string>
+	<string name="select_users_text">Select User</string>
+	<string name="new_user_text">Add</string>
+    <string name="new_name_dialog">Enter new user name</string>
+    <string name="un_paused">Un-Paused</string>
+    <string name="paused">Running</string>
+    
+<!-- Main Screen Buttons -->
+    <string name="button_learn_how_to_meditate">Learn How to Meditate</string>
+    <string name="button_new_session">New Session</string>
+    <string name="button_review_history">Review History</string>
+    <string name="button_set_reminder">Set Reminder</string>
+    <string name="device_status">Device Status:</string>
+    <string name="connected">Connected</string>
+    <string name="not_connected">Not Connected</string>
+    <string name="connect">Connect</string>
+
+<!-- Connection Dialog Box -->
+	<string name="connecting...">Connecting...</string>
+	<string name="connect_to_device">Connect to</string>
+	
+    
+<!-- How to meditate -->
+	<string name="meditation_instructions">
+	
+		1. Sit in a comfortable position with your back straight. \n
+		2. Begin focusing on your chest or "heart center," breathing in and out from that area. Pay attention to the sensations you feel from this core body region.\n
+		3. Generate a loving, accepting, kind feeling toward yourself, letting go of any judgmental thoughts that may arise.\n
+		4. As you breathe in and out,  silently repeat: "May I be free of distress and suffering".\n
+		5. Continue this process for the individual, animal or situation you wish to feel compassion for, substituting their name for "I".\n
+	
+	
+	</string>
+
+	<string name="meditation_title">How to meditate</string>
+	<string-array name="meditation_steps">
+		<item>1. Sit in a comfortable position with your back straight. </item>
+		<item>2. Begin focusing on your chest or "heart center," breathing in and out from that area. Pay attention to the sensations you feel from this core body region.</item>
+		<item>3. Generate a loving, accepting, kind feeling toward yourself, letting go of any judgmental thoughts that may arise.</item>
+		<item>4. As you breathe in and out,  silently repeat: "May I be free of distress and suffering".</item>
+		<item>5. Continue this process for the individual, animal or situation you wish to feel compassion for, substituting their name for "I".</item>
+	</string-array>
+	<string name="state_meditation_session">Start Meditation Session</string>
+	
+    <string-array name="bands_of_interest_array">
+        <item>Delta</item>
+        <item>Theta</item>
+        <item>LowAlpha</item>
+        <item>HighAlpha</item>
+        <item>LowBeta</item>
+        <item>HighBeta</item>
+        <item>LowGamma</item>
+        <item>MidGamma</item>
+        <item>(e)Attention</item>
+        <item>(e)Meditation</item>
+        <item>GSR</item>
+        <item>EMG</item>
+        <item>ECG</item>
+        <item>HeartRate</item>
+        <item>RespRate</item>
+        <item>SkinTemp</item>
+    </string-array>	
+
+    <string-array name="bands_of_interest_arrayvalues">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+        <item>13</item>
+        <item>14</item>
+        <item>15</item>
+        </string-array>	
+	
+
+	
+    <string-array name="bioharness_parameters_array">
+    
+        
+        <item>Heart Rate</item>
+        <item>Respiration Rate</item>
+        <item>Skin Temp</item>
+        <item>None</item>
+    </string-array>	
+	
+<!-- New Session -->
+	<string name="meditation_bar">Meditate to keep the bar in the center</string>
+	<string name="time_label">Time</string>
+	<string name="displaying">Displaying:</string>
+	<string name="time_remaining">Time Remaining</string>
+	<string name="start">Start</string>
+	<string name="pause">Pause</string>
+	
+<!-- Brain Waves -->
+	<string name="delta">Delta</string>
+	<string name="theta">Theta</string>
+	<string name="alpha">Alpha</string>
+	<string name="beta">Beta</string>
+	<string name="gamma">Gamma</string>
+
+<!-- Comparison Page (Progress charts) -->
+	<string name="progress_chart">Progress Chart</string>
+	<string name="time_in_theta">Time (min) in Theta</string>
+	<string name="theta_time">Theta time:</string>
+	<string name="session">Session</string>
+
+<!-- Set a reminder -->
+	<string name="create_a_reminder">Create a Reminder</string>
+	<string name="new_reminder">New Reminder</string>
+	<string name="remind">Remind</string>
+	<string name="set_time">Set Time</string>
+	<string name="repeat_reminder">Repeat reminder</string>
+	<string name="sound">Sound</string>
+	<string name="vibrate">Vibrate</string>
+	<string-array name="am_pm">
+		<item>AM</item>
+		<item>PM</item>
+	</string-array>
+	<string name="repeats">Repeats</string>
+	<string-array name="daily_weekly">
+		<item>Daily</item>
+		<item>Weekly</item>
+	</string-array>
+	<string name="every">Every</string>
+	<string name="weeks">Weeks</string>
+	<string name="on">On</string>
+	<string-array name="weekdays">
+		<item>Monday</item>
+		<item>Tuesday</item>
+		<item>Wednesday</item>
+		<item>Thursday</item>
+		<item>Friday</item>
+		<item>Saturday</item>
+		<item>Sunday</item>
+	</string-array>
+	
+<!-- Misc -->
+	<string name="yes">Yes</string>
+	<string name="no">No</string>
+	<string name="back">Back</string>
+	<string name="next">Next</string>
+	<string name="close">Close</string>
+	<string name="save">Save</string>
+	<string name="delete">Delete</string>
+	<string name="notes...">Notes...</string>
+	<string name="notes">Notes</string>
+	<string name="do_not_show_again">Do not show this again.</string>
+	<string name="session_length">Session Length</string>
+	<string name="reScale">Re-Scale inputs</string>
+	<string name="saveRawWave">Save raw wave to file:</string>
+	<string name="screenToExit">Press anywhere on the screen to continue.</string> 
+	<string name="allowComments">Allow comments at start of session:</string> 
+    
+	<!-- EULA -->
+	<string name="eula_title">License</string>
+	<string name="eula_accept">Accept</string>
+	<string name="eula_refuse">Refuse</string>
+	<string name="eula_text"><![CDATA[
+NATIONAL CENTER FOR TELEHEALTH AND TECHNOLOGY ("T2")
+SOFTWARE END USER LICENSE AGREEMENT
+
+By agreeing to have any of T2 software products installed on to your device and by subsequent use of the Software, you agree to comply with the terms of this general End User Licence Agreement ("EULA") where no specific agreement is in place between T2 and the user of the software. If you do not agree to the terms of this EULA, do not install or use the Software but uninstall it from your device. This EULA applies to any upgrades and supplements to the original Software provided and is referred to on your opening screen.
+_______________
+
+1. The Licensed Software is owned by The National Center for Telehealth and Technology ("T2") a division of the US Defense Centers of Excellence ("DCOE") and the United States Department of Defense ("DOD"). The Software is licensed, not sold, only on the terms of this EULA. Acceptance and installation of the software indicates your acceptance of the terms and conditions of this EULA.
+
+Upon installation of the software, you will acquire the right to use the Software, directly from T2.  You assume responsibility for the selection of the program to achieve your intended results, and for the installation, use and results obtained from the Licensed Software.
+
+2. In consideration of your acceptance of the terms and conditions contained in this EULA, T2 grants you a non-exclusive license to use the Licensed Software and the associated documentation for your own needs on one device. You are not licensed to rent, lease, transfer or distribute the Software.
+
+3. Title to the Software, including media and documentation, remain with T2. You may not copy, reproduce or make data transmissions, in whole or in part, except as is necessary for back-up or archival purposes. You may not reverse engineer, translate, disassemble, decompile the Software or create similar software in whole or in part.
+
+4. The license is effective upon acceptance and installation of the Licensed Software and shall continue until terminated. You may terminate it at any time by uninstalling the Licensed Software. T2 has the right to terminate this Agreement if you fail to comply with any term or condition of this EULA. Upon termination you shall stop all use of the Software and uninstall the Licensed Software.
+
+5. Confidentiality of the Software will survive any termination of this EULA, to include the application, design, and functionality.
+
+6. This Software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+7. In no event will T2 be liable for any loss of data, loss of use, or indirect, special, incidental or consequential damages in any way related to or arising out of the use of the Software. T2\'s maximum liability shall in no event exceed the amounts paid to T2 for the Licensed Software.
+
+8. The prevailing party in any action or proceeding between T2 and End-User Licensee arising out of or related to this Agreement shall be entitled to recover reasonable legal fees and costs, including lawyers\' fees, which may be incurred.
+
+9. This Agreement shall be construed and enforced in accordance with the laws of the District of Columbia, United States of America and each party agrees to be subject to those relevant laws.
+
+10. You also acknowledge that it is your responsibility to protect and otherwise secure any information captured and stored by the software once installed on your device.
+
+11. Information captured and stored by the software program may be considered sensitive information. It is the end user\'s responsibility to protect or otherwise secure the content captured and stored by the software once installed on the end user\'s device.
+
+It is understood and acknowledged that T2 has the absolute right to obtain injunctive relief to protect T2\'s proprietary rights.
+
+By using the Software, you further agree that this is the complete and exclusive statement of the Agreement which supersedes any proposal or prior agreement, oral or written, and any other communications relating to the subject matter of this EULA.
+
+If any provision of this Agreement is held to be invalid or unenforceable the remaining provisions will not be affected.
+
+For statistical purposes T2 collects anonymous usage data and sends it to a data provider. By accepting this agreement, it is understood that this feature can be disabled through settings screen at any time.
+
+Disclaimer: The information in the application is not intended as a substitute for any type of professional medical services or training and should not be used for such purposes. The information is provided as is and the author does not warrant the accuracy of the information. This information is not meant to diagnose or develop permanent treatment plans for health emergencies, health problems or diseases. If you are in an emergency or life-threatening medical situation, seek medical assistance immediately. Dial emergency number (911 in the USA) for emergency medical services.
+
+External Links: The appearance of external hyperlinks does not constitute endorsement by the United States Department of Defense of the linked websites, or the information, products or services contained therein. The United States Department of Defense does not exercise any editorial control over the information you may find at these locations. All links are provided consistent with the stated purpose of these DoD websites. 
+	]]></string>    
+    
+</resources>
