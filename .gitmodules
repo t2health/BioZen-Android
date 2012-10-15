@@ -1,0 +1,6 @@
+[submodule "T2AndroidLib-SG"]
+	path = T2AndroidLib-SG
+	url = https://github.com/t2health/T2AndroidLib-SG
+[submodule "BSPAN"]
+	path = BSPAN
+	url = https://github.com/t2health/BSPAN---Bluetooth-Sensor-Processing-for-Android.git
