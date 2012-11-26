@@ -51,7 +51,6 @@ import android.widget.LinearLayout;
 
 public class InstructionsActivity extends Activity implements View.OnTouchListener {
 	private static final String mActivityVersion = "1.0";
-	CheckBox mShowInstructionsCheckbox;	
     private WebView mWebView;	
 
 	
@@ -59,15 +58,9 @@ public class InstructionsActivity extends Activity implements View.OnTouchListen
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);		
-//        setContentView(R.layout.instructions_activity_layout);        
         setContentView(R.layout.new_instructions_layout);        
-		mShowInstructionsCheckbox = (CheckBox) findViewById(R.id.checkBox1);
-		
-		boolean instructionsOnStart = SharedPref.getBoolean(this, BioZenConstants.PREF_INSTRUCTIONS_ON_START, BioZenConstants.PREF_INSTRUCTIONS_ON_START_DEFAULT);
-		mShowInstructionsCheckbox.setChecked(instructionsOnStart);
 
 		final LinearLayout parent = (LinearLayout) findViewById(R.id.instructionslayout);
-//		final RelativeLayout parent = (RelativeLayout) findViewById(R.id.instructionsLayout	);
 		parent.setOnTouchListener (this);
 		
         mWebView = (WebView) findViewById(R.id.webview);
@@ -78,7 +71,6 @@ public class InstructionsActivity extends Activity implements View.OnTouchListen
         webSettings.setJavaScriptEnabled(true);
         webSettings.setSupportZoom(false);
         mWebView.setBackgroundColor(Color.parseColor("#C0C0C0"));      
-        mShowInstructionsCheckbox.setBackgroundColor(Color.parseColor("#C0C0C0"));
 
         Button backButton = (Button) findViewById(R.id.buttonBack);
         backButton.setBackgroundColor(Color.parseColor("#C0C0C0")); 
@@ -123,9 +115,6 @@ public class InstructionsActivity extends Activity implements View.OnTouchListen
 	
 	@Override
 	protected void onDestroy() {
-		boolean isChecked = mShowInstructionsCheckbox.isChecked();
-		SharedPref.putBoolean(this, BioZenConstants.PREF_INSTRUCTIONS_ON_START, isChecked );
-		
 		Intent resultIntent;
 		resultIntent = new Intent();
 		resultIntent.putExtra(BioZenConstants.INSTRUCTIONS_USER_ACTIVITY_RESULT, "");
