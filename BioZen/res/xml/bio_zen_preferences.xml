@@ -61,10 +61,22 @@
         <ListPreference
                 android:dialogTitle="User Mode" android:key="user_mode" android:title="User Mode" android:entries="@array/user_mode_array" android:entryValues="@array/user_mode_array_values" android:defaultValue="1" android:summary="Selects between provider mode and single user mode"/>
     
-        <CheckBoxPreference
-                android:title="Show Instructions on Start" android:summary="Selects wheather or not to show instructions when meditation session starts" android:defaultValue="false" android:key="instructions_on_start"/>
-            
     </PreferenceCategory>
+
+        <PreferenceCategory android:title="Help Pages">
+
+        <CheckBoxPreference
+                android:title="Show Help on Startup" android:summary="Selects wheather or not to show instructions when application starts" android:defaultValue="false" android:key="help_on_startup"/>
+        <CheckBoxPreference
+                android:title="Show Help on View" android:summary="Selects wheather or not to show instructions when 'view' is selected" android:defaultValue="false" android:key="help_on_view"/>
+        
+        <CheckBoxPreference
+                android:title="Show Help on Review" android:summary="Selects wheather or not to show instructions when 'review' is selected" android:defaultValue="false" android:key="help_on_review"/>
+        
+        <CheckBoxPreference
+                android:title="Show Help on New Session" android:summary="Selects wheather or not to show instructions when 'new session'" android:defaultValue="false" android:key="help_on_newsession"/>
+        
+        </PreferenceCategory>
 
     <PreferenceCategory android:title="Sensor Names">
         <EditTextPreference android:key="shimmer_sensor" android:summary="List of Bluetooth names to map as Shimmer Devices" android:title="Shimmer Device Name(s)"></EditTextPreference>

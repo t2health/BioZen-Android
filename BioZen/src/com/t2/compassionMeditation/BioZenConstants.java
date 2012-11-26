@@ -47,9 +47,22 @@ public class BioZenConstants {
 	public static final String PREF_ALPHA_GAIN = "alpha_gain";
 	public static final float PREF_ALPHA_GAIN_DEFAULT = 5;
 
-	public static final String PREF_INSTRUCTIONS_ON_START = "instructions_on_start";
-	public static final boolean PREF_INSTRUCTIONS_ON_START_DEFAULT = false;
+	public static final String PREF_HELP_ON_STARTUP = "help_on_startup";
+	public static final boolean PREF_HELP_ON_STARTUP_DEFAULT = true;
+	public static final String PREF_HELP_ON_VIEW = "help_on_view";
+	public static final boolean PREF_HELP_ON_VIEW_DEFAULT = true;
+	public static final String PREF_HELP_ON_REVIEW = "help_on_review";
+	public static final boolean PREF_HELP_ON_REVIEW_DEFAULT = true;
+	public static final String PREF_HELP_ON_NEWSESSION = "help_on_newsession";
+	public static final boolean PREF_HELP_ON_NEWSESSION_DEFAULT = true;
 
+	public static final String PREF_INSTRUCTIONS_ON_START = "instructions_on_newsession";
+	public static final boolean PREF_INSTRUCTIONS_ON_START_DEFAULT = false;
+	
+	
+	
+	
+	
 	public static final String PREF_COMMENTS = "Allow Comments";
 	public static final boolean PREF_COMMENTS_DEFAULT = false;
 
@@ -106,6 +119,16 @@ public class BioZenConstants {
 	public static final int END_SESSION_SAVE = 1; 
 	public static final int END_SESSION_RESTART = 2; 
 
+	public static final int NEW_SESSION_ACTIVITY = 0x307;	
+	public static final String NEW_SESSION_ACTIVITY_RESULT = "InstructionsActivityResult";	
+	
+	public static final int VIEW_ACTIVITY = 0x308;	
+	public static final String VIEW_ACTIVITY_RESULT = "ViewActivityResult";	
+	
+	public static final int REVIEW_ACTIVITY = 0x309;	
+	public static final String REVIEW_ACTIVITY_RESULT = "ReviewActivityResult";	
+	
+	
 	public static final int SPINE_MAINSERVER_ACTIVITY = 0x307;	
 	public static final String SPINE_MAINSERVER_ACTIVITY_RESULT = "SpineMainServerActivityResult";	
 	

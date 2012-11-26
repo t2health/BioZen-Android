@@ -66,6 +66,38 @@ public class BioZenPreferenceActivity extends PreferenceActivity implements OnSh
         //  Read default values and it they haven't been set, set them
         // so they show up in the first preferences screen
         // Otherwise they show up as blank!
+        boolean pref = SharedPref.getBoolean(this,
+				BioZenConstants.PREF_HELP_ON_STARTUP,
+				BioZenConstants.PREF_HELP_ON_STARTUP_DEFAULT);
+        if (pref) {
+            SharedPref.putBoolean(this,
+    				BioZenConstants.PREF_HELP_ON_STARTUP,BioZenConstants.PREF_HELP_ON_STARTUP_DEFAULT);
+        }
+       	pref = SharedPref.getBoolean(this,
+				BioZenConstants.PREF_HELP_ON_VIEW,
+				BioZenConstants.PREF_HELP_ON_VIEW_DEFAULT);
+        if (pref) {
+            SharedPref.putBoolean(this,
+    				BioZenConstants.PREF_HELP_ON_VIEW,BioZenConstants.PREF_HELP_ON_VIEW_DEFAULT);
+        }
+       	pref = SharedPref.getBoolean(this,
+				BioZenConstants.PREF_HELP_ON_REVIEW,
+				BioZenConstants.PREF_HELP_ON_REVIEW_DEFAULT);
+        if (pref) {
+            SharedPref.putBoolean(this,
+    				BioZenConstants.PREF_HELP_ON_REVIEW,BioZenConstants.PREF_HELP_ON_REVIEW_DEFAULT);
+        }
+       	pref = SharedPref.getBoolean(this,
+				BioZenConstants.PREF_HELP_ON_NEWSESSION,
+				BioZenConstants.PREF_HELP_ON_NEWSESSION_DEFAULT);
+        if (pref) {
+            SharedPref.putBoolean(this,
+    				BioZenConstants.PREF_HELP_ON_NEWSESSION,BioZenConstants.PREF_HELP_ON_NEWSESSION_DEFAULT);
+        }
+        
+        //  Read default values and it they haven't been set, set them
+        // so they show up in the first preferences screen
+        // Otherwise they show up as blank!
         String value = SharedPref.getString(this, "audio_track", "None");
         if (value.equalsIgnoreCase("None")) {
         	SharedPref.putString(this, "audio_track", "None");

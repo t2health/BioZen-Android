@@ -33,6 +33,9 @@ visit http://www.opensource.org/licenses/EPL-1.0
 
 package com.t2.compassionMeditation;
 
+import org.t2.pr.classes.SimpleGestureFilter;
+import org.t2.pr.classes.TransitionView;
+import org.t2.pr.classes.SimpleGestureFilter.SimpleGestureListener;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -50,12 +53,14 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.Gallery;
 import android.widget.Gallery.LayoutParams;
 import android.widget.ImageView;
@@ -64,8 +69,7 @@ import android.widget.Toast;
 import com.t2.R;
 import com.t2.filechooser.FileChooser;
 
-
-public class MainChooserActivityNew extends Activity implements OnTouchListener {
+public class MainChooserActivityNew extends Activity implements OnTouchListener, SimpleGestureListener {
 	private static final String TAG = "BFDemo";	
 
     private DisplayMetrics mDisplayMetrics = new DisplayMetrics();	
@@ -79,7 +83,6 @@ public class MainChooserActivityNew extends Activity implements OnTouchListener 
     private static final long VIBRATE_SHORT = 20;  // msec
     private static final long VIBRATE_LONG = 20;  // msec
 
-    
 	// ID index variables - The enumerations MUST match the image references below
 	private static final int ID_NONE = 0;
 	private static final int ID_LEARN = 1;
@@ -91,8 +94,8 @@ public class MainChooserActivityNew extends Activity implements OnTouchListener 
 	private static final int ID_VIEW_FILES = 7;
 	private static final int ID_ABOUT = 8;
 	
-	
-    private Integer[] mThumbIds = {
+    // Resources for gallery (scrolling selection bar at bottom
+	private Integer[] mThumbIds = {
             R.drawable.biozen_select,
             R.drawable.biozen_learn_up_new,
             R.drawable.biozen_view_up_new,
@@ -102,7 +105,17 @@ public class MainChooserActivityNew extends Activity implements OnTouchListener 
             R.drawable.biozen_preferences,
             R.drawable.biozen_view_files,
             R.drawable.biozen_about
-            };    
+    };    
+    
+	// Resources for main screen help
+	private Integer[] mCardsIds = {
+    	    R.drawable.help001,     
+    	    R.drawable.help002,     
+    	    R.drawable.help003,     
+    	    R.drawable.help004,     
+    	    R.drawable.help005,     
+    };
+    
     
 	private int mLastButtonPressed;
 
@@ -118,7 +131,15 @@ public class MainChooserActivityNew extends Activity implements OnTouchListener 
 	 */
 	private String mApplicationVersion = "";	
 	
+	private TransitionView mIvCard;
+	private SimpleGestureFilter mDetector;
+	private int mCardIndex = -1;
 	
+	ImageView mLogoImageView;
+	
+	boolean mHelpOnStartup;
+	Button mHideButton;
+	int mLatestMotionEvent = 0;
 	
     @Override
 	public boolean onTouchEvent(MotionEvent event) {
@@ -143,11 +164,41 @@ public class MainChooserActivityNew extends Activity implements OnTouchListener 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);		// This needs to happen BEFORE setContentView
         
+		setContentView(R.layout.main_chooser_activity_layout_new);
+
+		mHideButton = (Button) findViewById(R.id.buttonHidePages);
+		mLogoImageView = (ImageView) findViewById(R.id.imageView1);	
+		
+		mDetector = new SimpleGestureFilter(this,this);		
+		mIvCard = (TransitionView)this.findViewById(R.id.ivcard);
+
+		mHelpOnStartup = SharedPref.getBoolean(this,
+				BioZenConstants.PREF_HELP_ON_STARTUP,
+				BioZenConstants.PREF_HELP_ON_STARTUP_DEFAULT);
+        if (!mHelpOnStartup) {
+        	mLogoImageView.setVisibility(View.VISIBLE);
+        	mHideButton.setVisibility(View.INVISIBLE);
+        	mIvCard.setVisibility(View.INVISIBLE);	        	
+        }
+        else {
+        	mLogoImageView.setVisibility(View.GONE);        	
+        	mHideButton.setVisibility(View.VISIBLE);
+        	mIvCard.setVisibility(View.VISIBLE);	        	
+        }
         
-        setContentView(R.layout.main_chooser_activity_layout_new);
+        mHideButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+	            //SharedPref.putBoolean(mInstance, BioZenConstants.PREF_HELP_ON_STARTUP, false);
+	        	mLogoImageView.setVisibility(View.VISIBLE);
+	        	mHideButton.setVisibility(View.INVISIBLE);
+	        	mIvCard.setVisibility(View.INVISIBLE);	        	
+			}
+        	
+	    });
         
         setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);            
-
 
         mGallery = (Gallery) findViewById(R.id.gallery);
         mGallery.setAdapter(new ImageAdapter(this));
@@ -156,8 +207,6 @@ public class MainChooserActivityNew extends Activity implements OnTouchListener 
         mGallery.setSelection(1);	// Do this so more of the ribbon shows on startup
         String s = SharedPref.getString(this,BioZenConstants.PREF_USER_MODE,BioZenConstants.PREF_USER_MODE_DEFAULT);
         mUserMode = Integer.parseInt(s);
-        
-        
         
 		try {
 			PackageManager packageManager = this.getPackageManager();
@@ -177,10 +226,16 @@ public class MainChooserActivityNew extends Activity implements OnTouchListener 
 	    	SharedPref.putString(this, "SelectedUser", 	"");
 		}        
 		
-		
-		Eula.show(this); 		
+		Eula.show(this); 	
 		
     }
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		mCardIndex = -1;
+		NextCard();		
+	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -206,15 +261,29 @@ public class MainChooserActivityNew extends Activity implements OnTouchListener 
 //				this.startActivity(intent);			    	
 //
 //				break;
-//				
 
+			case BioZenConstants.VIEW_ACTIVITY:
+			    Intent intent = new Intent(mInstance, Graphs1Activity.class);
+	    		mInstance.startActivity(intent);		    	
+				break;
+		
+			case BioZenConstants.REVIEW_ACTIVITY:
+    			intent = new Intent(mInstance, ViewSessionsActivity.class);
+	    		mInstance.startActivity(intent); 		    	
+				break;
+					
+			case BioZenConstants.NEW_SESSION_ACTIVITY:
+				intent = new Intent(mInstance, MeditationActivity.class);
+				mInstance.startActivity(intent);					
+				break;
+		
 			case FileChooser.FILECHOOSER_USER_ACTIVITY:
 				if (data == null)
 					return;
 				String sessionName = data.getStringExtra(FileChooser.FILECHOOSER_USER_ACTIVITY_RESULT);
 		    	Toast.makeText(this, "File Clicked: " + sessionName, Toast.LENGTH_SHORT).show();
 		    	
-				Intent intent = new Intent(this, Graphs1Activity.class);
+				intent = new Intent(this, Graphs1Activity.class);
 				Bundle bundle = new Bundle();
 		
 				bundle.putString(BioZenConstants.EXTRA_SESSION_NAME,sessionName);
@@ -226,10 +295,6 @@ public class MainChooserActivityNew extends Activity implements OnTouchListener 
 				this.startActivity(intent);			    	
 		
 				break;
-				
-
-		
-		
 		
 		    case (BioZenConstants.SELECT_USER_ACTIVITY) :  
 			      if (resultCode == RESULT_OK) {
@@ -246,17 +311,17 @@ public class MainChooserActivityNew extends Activity implements OnTouchListener 
 			    	}
 
 			    	SharedPref.putString(this, "SelectedUser", 	userName);
-			    	  
 			      } 
 			      break; 	
 			      
-		    case (BioZenConstants.INSTRUCTIONS_USER_ACTIVITY):
-		    	
-		    	if (mLastButtonPressed == ID_NEW_SESSION) {
-					Intent intent1 = new Intent(this, MeditationActivity.class);
-					this.startActivity(intent1);		
-		    	}
-		    	break;
+// This was used when we had instructions before new session option			      
+//		    case (BioZenConstants.INSTRUCTIONS_USER_ACTIVITY):
+//		    	
+//		    	if (mLastButtonPressed == ID_NEW_SESSION) {
+//					Intent intent1 = new Intent(this, MeditationActivity.class);
+//					this.startActivity(intent1);		
+//		    	}
+//		    	break;
 		    	
 		    case (BioZenConstants.USER_MODE_ACTIVITY):
 		    	break;
@@ -308,27 +373,35 @@ public class MainChooserActivityNew extends Activity implements OnTouchListener 
 
     }
 
-
-
-
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
 	      final int actionPerformed = event.getAction();
 	      final int widgetID = v.getId();
 	      final float MAXPRESSRANGE = 10.0f;
+
+	      
+//	      Log.d(TAG, "onTouch, Action OTHER, Motion Event = " + actionPerformed);
+
+	      // We need to save this event so we know in screen swipe to ignore gallary swipes
+	      mLatestMotionEvent = actionPerformed;
+	      
 	      
 	      
 	      if (actionPerformed == MotionEvent.ACTION_DOWN) {
+	    	  
 	    	  fX=event.getRawX();
               fY=event.getRawY();	   
-      			vibrate(VIBRATE_LONG);
-              
+    	      Log.d(TAG, "onTouch, Action DOWN, x = " + fX + ", y = " + fY);
+    	      vibrate(VIBRATE_LONG);
 	      }
 	        
 	      if (actionPerformed == MotionEvent.ACTION_UP) {
 	    	  
               final float posX = event.getRawX();
               final float posY = event.getRawY();
+              
+    	      Log.d(TAG, "onTouch, Action UP, x = " + posX + ", y = " + posY);
+
               
               //detect if user performed a simple press
               if ((posX < fX+MAXPRESSRANGE) && (posX > fX-MAXPRESSRANGE))
@@ -342,7 +415,6 @@ public class MainChooserActivityNew extends Activity implements OnTouchListener 
 
                       //this is necessary to obtain the index of the view currently visible and pressed
                       final int iVisibleViewIndex = position - mGallery.getFirstVisiblePosition();
-
                       
                       //get a reference to the child and modify the border
                       View child = mGallery.getChildAt(iVisibleViewIndex);       
@@ -351,55 +423,82 @@ public class MainChooserActivityNew extends Activity implements OnTouchListener 
 //                      child.setBackgroundColor(Color.BLACK);
  //                     ImageView i = child.g
                       
-                      if (position != AdapterView.INVALID_POSITION)
-                      {
+                      if (position != AdapterView.INVALID_POSITION) {
                     	  mGallery.setSelection(position, true);
             	    	  startActivity(position);
-      
                       }
 
                       // consume event
                       return true;
                   }
               }
-	    	  
 	      }
 	        
 		return false;
 	}
-
 	
 	void startActivity(int position) {
 		mLastButtonPressed = position; 
-
+		boolean help;
+		Intent intent1;
+		Intent intent;
+		
 		switch (position) {
 		
+			
 	    	case ID_LEARN:
-	    		Intent intent1 = new Intent(mInstance, InstructionsActivity.class);
+	    		intent1 = new Intent(mInstance, InstructionsActivity.class);
 	    		mInstance.startActivityForResult(intent1, BioZenConstants.INSTRUCTIONS_USER_ACTIVITY);	    		
 			break;
 			
 		    case ID_NEW_SESSION:
-    			boolean instructionsOnStart = SharedPref.getBoolean(mInstance, 
-				BioZenConstants.PREF_INSTRUCTIONS_ON_START, 
-				BioZenConstants.PREF_INSTRUCTIONS_ON_START_DEFAULT);        
-
-				if (instructionsOnStart) {
-					intent1 = new Intent(mInstance, InstructionsActivity.class);
-					mInstance.startActivityForResult(intent1, BioZenConstants.INSTRUCTIONS_USER_ACTIVITY);		
+    			help = SharedPref.getBoolean(mInstance, 
+				BioZenConstants.PREF_HELP_ON_NEWSESSION, 
+				BioZenConstants.PREF_HELP_ON_NEWSESSION_DEFAULT);        
+				if (help) {
+					intent = new Intent(mInstance, HelpScreenActivity.class);
+					Bundle bundle = new Bundle();
+					bundle.putString("SESSION_TYPE","newsession");
+					intent.putExtras(bundle);	
+					mInstance.startActivityForResult(intent, BioZenConstants.NEW_SESSION_ACTIVITY);		
 				} else {
-					Intent intent = new Intent(mInstance, MeditationActivity.class);
+					intent = new Intent(mInstance, MeditationActivity.class);
 					mInstance.startActivity(intent);		
 				}		    	
 		    	break;
 		    case ID_REVIEW:
-    			Intent intent = new Intent(mInstance, ViewSessionsActivity.class);
-//    			Intent intent = new Intent(mInstance, ViewParametersActivity.class);
-    			mInstance.startActivityForResult(intent, FileChooser.FILECHOOSER_USER_ACTIVITY); 		    	
+	 			help = SharedPref.getBoolean(mInstance, 
+	 					BioZenConstants.PREF_HELP_ON_REVIEW, 
+	 					BioZenConstants.PREF_HELP_ON_REVIEW_DEFAULT);        
+
+	 					if (help) {
+	 						intent1 = new Intent(mInstance, HelpScreenActivity.class);
+	 						Bundle bundle = new Bundle();
+	 						bundle.putString("SESSION_TYPE","review");
+	 						intent1.putExtras(bundle);	
+	 						mInstance.startActivityForResult(intent1, BioZenConstants.REVIEW_ACTIVITY);		
+	 					} else {
+	 		    			intent = new Intent(mInstance, ViewSessionsActivity.class);
+	 		    			mInstance.startActivity(intent); 		    	
+	 					}		    	
 		    	break;
 		    case ID_VIEW_ACTIVITY:
-    			intent = new Intent(mInstance, Graphs1Activity.class);
-    			mInstance.startActivity(intent);		    	
+	 			help = SharedPref.getBoolean(mInstance, 
+	 					BioZenConstants.PREF_HELP_ON_VIEW, 
+	 					BioZenConstants.PREF_HELP_ON_VIEW_DEFAULT);        
+
+	 					if (help) {
+	 						intent1 = new Intent(mInstance, HelpScreenActivity.class);
+	 						Bundle bundle = new Bundle();
+	 						bundle.putString("SESSION_TYPE","view");
+	 						intent1.putExtras(bundle);	
+	 						mInstance.startActivityForResult(intent1, BioZenConstants.VIEW_ACTIVITY);		
+	 					} else {
+	 				    	intent = new Intent(mInstance, Graphs1Activity.class);
+	 		    			mInstance.startActivity(intent);		    	
+	 					}		    	
+
+		    	
 		    	break;			
 	    	case ID_BLUETOOTH_SETTINGS:
 				intent = new Intent(this, DeviceManagerActivity.class);			
@@ -429,10 +528,7 @@ public class MainChooserActivityNew extends Activity implements OnTouchListener 
 				alert.show();			
 	    		
 	    		break;
-	    		
-		
 		}
-		
 	}
 
     /**
@@ -444,6 +540,60 @@ public class MainChooserActivityNew extends Activity implements OnTouchListener 
                     this.getSystemService(Context.VIBRATOR_SERVICE);
         }
         mVibrator.vibrate(duration);
-    }	
+    }
 
+	@Override
+	public boolean dispatchTouchEvent(MotionEvent me){
+		this.mDetector.onTouchEvent(me);
+		return super.dispatchTouchEvent(me);
+	}
+    
+	@Override
+	public void onSwipe(int direction) {
+
+    	Log.d(TAG, "onSwipe");
+		
+    	// If we are processing a gallary swipe don't do screen swipe
+    	if (MotionEvent.ACTION_MOVE == mLatestMotionEvent)
+    		return;
+    	
+    	
+		switch (direction) {
+
+		case SimpleGestureFilter.SWIPE_RIGHT : PrevCard();
+			break;
+		case SimpleGestureFilter.SWIPE_LEFT :  NextCard();
+			break;
+
+		}	}
+
+	@Override
+	public void onDoubleTap() {
+	}
+
+	private void NextCard() {
+		
+		if (mCardIndex < (mCardsIds.length - 1)) {
+			mCardIndex++;
+		}
+		else {
+			mCardIndex = 0;
+		}
+		
+		int resID = mCardsIds[mCardIndex]; 
+		mIvCard.changePage(resID, 0);
+		mIvCard.refreshDrawableState();
+	}
+	
+	private void PrevCard() {
+		
+		if(mCardIndex > 0)
+			mCardIndex--;
+		else
+			mCardIndex = (mCardsIds.length -1);
+		
+		int resID = mCardsIds[mCardIndex]; 
+		mIvCard.changePage(resID, 1);
+		mIvCard.refreshDrawableState();
+	}	
 }

@@ -24,12 +24,40 @@
     	android:layout_height="wrap_content" 
     	android:src="@drawable/biozen_bkgd_new"
     	></ImageView>
-    <ImageView 
-    	android:layout_width="wrap_content" 
-    	android:id="@+id/imageView1" 
-    	android:layout_height="wrap_content" 
-    	android:src="@drawable/biozen_pages_logo_new"
-    	android:paddingTop="200dip" android:paddingLeft="10dip" android:paddingRight="10dip"></ImageView>    
+    
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/button2"
+        android:layout_alignParentTop="true"
+        android:orientation="vertical" >
+        
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dip"
+        android:paddingLeft="10dip"
+        android:paddingRight="10dip"
+        android:paddingTop="0dip"
+        android:src="@drawable/biozen_pages_logo_new"
+        android:visibility="gone" 
+        >
+
+    </ImageView>    
+    
+        <org.t2.pr.classes.TransitionView
+        android:id="@+id/ivcard"
+        android:layout_weight="1"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" />
+    <Button
+        android:id="@+id/buttonHidePages"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hide" />
     
     <Gallery android:id="@+id/gallery"
         android:layout_width="fill_parent"
@@ -39,7 +67,13 @@
         
         android:gravity="center_vertical"
         android:spacing="2dp"
-    />
+    />        
+        
+    </LinearLayout>    
+    
+    
+    
+
 
 </RelativeLayout>
    
