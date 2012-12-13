@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.t2"
     android:screenOrientation="portrait" 
-		android:versionCode="16" android:versionName="1.8.9">
+		android:versionCode="17" android:versionName="1.8.10">
 	<uses-sdk android:minSdkVersion="7" />
 	<uses-permission android:name="android.permission.VIBRATE" />
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
