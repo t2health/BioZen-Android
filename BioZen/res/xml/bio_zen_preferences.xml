@@ -103,6 +103,11 @@
         <CheckBoxPreference
                 android:title="Save Raw Wave to File" android:key="save_raw_wave" android:summary="Selects whether or not to save raw mindset waveform data to file" android:defaultValue="false"/>
         
+        <CheckBoxPreference
+                android:title="Enable External Database" android:key="database_enabled" android:summary="Selects whether or not to enable sending to external database" android:defaultValue="false"/>
+        
+        <EditTextPreference android:key="database_sync_name" android:summary="URL of external database to sync to" android:title="External Database" android:defaultValue="@string/database_uri"></EditTextPreference>
+        
     </PreferenceCategory>
     
     

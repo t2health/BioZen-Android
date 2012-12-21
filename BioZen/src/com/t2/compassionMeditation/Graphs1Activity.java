@@ -39,6 +39,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Timer;
@@ -72,6 +73,7 @@ import spine.datamodel.ServiceMessage;
 import spine.datamodel.ShimmerData;
 import spine.datamodel.functions.ShimmerNonSpineSetupSensor;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -87,6 +89,7 @@ import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.telephony.TelephonyManager;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
@@ -225,6 +228,16 @@ public class Graphs1Activity extends BaseActivity implements OnBioFeedbackMessag
 	int mRespRateTotal;
 	int mRespRateIndex;
 
+	private boolean mDatabaseEnabled;
+	/**
+	 * Static names dealing with the external database
+	 */
+	public static final String dDatabaseName = "bigbrother-sync";
+	public static final String dDesignDocName = "bigbrother-local";
+	public static final String dDesignDocId = "_design/" + dDesignDocName;
+	public static final String byDateViewName = "byDate";
+
+	
 	/**
 	 *  Right now we're using only one shimmer node for all shimmer devices
 	 *  (since we address they by BT address)
@@ -255,12 +268,38 @@ public class Graphs1Activity extends BaseActivity implements OnBioFeedbackMessag
         setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);        
                 
 		mLoggingEnabled = SharedPref.getBoolean(this, "enable_logging", 	true);
+		mDatabaseEnabled = SharedPref.getBoolean(this, "database_enabled", false);        
+		
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.US);
-		String sessionId = sdf.format(new Date());
+		String sessionDate = sdf.format(new Date());
 		String userId = SharedPref.getString(this, "SelectedUser", 	"");
+		long sessionId = SharedPref.getLong(this, "bio_session_start_time", 0);
+
+		Calendar cal = Calendar.getInstance();						
+		// The session start time will be used as session id
+		// Note this also sets session start time
+		// **** This session ID will be prepended to all JSON data stored
+		//      in the external database until it's changed (by the start
+		//		of a new session.
+		SharedPref.setBioSessionId(sharedPref, cal.getTimeInMillis());		
 		
-		mDataOutHandler = new DataOutHandler(this, userId,sessionId, mAppId );
+		
+		mDataOutHandler = new DataOutHandler(this, userId,sessionDate, mAppId, DataOutHandler.DATA_TYPE_EXTERNAL_SENSOR, sessionId );
+
+		if (mDatabaseEnabled) {
+			TelephonyManager telephonyManager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
+	   		String myNumber = telephonyManager.getLine1Number();
+	   		
+	   		String remoteDatabaseUri = SharedPref.getString(this, "database_sync_name", getString(R.string.database_uri));
+	   		remoteDatabaseUri += myNumber; 
+	   		
+			Log.d(TAG, "Initializing database at " + remoteDatabaseUri); // TODO: remove
+			mDataOutHandler.initializeDatabase(dDatabaseName, dDesignDocName, dDesignDocId, byDateViewName, remoteDatabaseUri);
+		}			
+		
+		
+		//mDataOutHandler = new DataOutHandler(this, userId,sessionDate, mAppId );
 		mBioDataProcessor.initialize(mDataOutHandler);
 		
 		

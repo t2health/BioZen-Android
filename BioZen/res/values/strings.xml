@@ -229,4 +229,6 @@ Disclaimer: The information in the application is not intended as a substitute f
 External Links: The appearance of external hyperlinks does not constitute endorsement by the United States Department of Defense of the linked websites, or the information, products or services contained therein. The United States Department of Defense does not exercise any editorial control over the information you may find at these locations. All links are provided consistent with the stated purpose of these DoD websites. 
 	]]></string>    
     
+<string name="database_uri">http://admin:PA$$word12345@gap.t2health.org/couchdb/bigbrother</string>	
+	
 </resources>

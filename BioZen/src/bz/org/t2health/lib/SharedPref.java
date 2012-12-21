@@ -196,6 +196,33 @@ public class SharedPref {
 		}
 	}
 	
+	public static long getBioSessionStartTime(SharedPreferences sharedPref) {
+		return sharedPref.getLong("bio_session_start_time", 0);
+	}
+	
+	public static void setBioSessionStartTime(SharedPreferences sharedPref, long time) {
+		sharedPref.edit().putLong("bio_session_start_time", time).commit();
+		return;
+	}
+	
+	public static long getBioSessionId(SharedPreferences sharedPref) {
+		return sharedPref.getLong("bio_session_start_time", 0);
+	}
+	
+	public static void setBioSessionId(SharedPreferences sharedPref, long time) {
+		sharedPref.edit().putLong("bio_session_start_time", time).commit();
+		return;
+	}
+	
+	public static long getBioSessionEndTime(SharedPreferences sharedPref) {
+		return sharedPref.getLong("bio_session_end_time", 0);
+	}
+	
+	public static void setBioSessionEndTime(SharedPreferences sharedPref, long time) {
+		sharedPref.edit().putLong("bio_session_end_time", time).commit();
+		return;
+	}	
+	
 	public static class Security {
 		public static boolean isEnabled(Context c) {
 			return getBoolean(c, "security_enabled", false);
