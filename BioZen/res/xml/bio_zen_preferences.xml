@@ -89,6 +89,9 @@
     
     <PreferenceCategory android:title="Advanced Preferences">
     
+        <CheckBoxPreference
+                android:title="Enable ANT HRM" android:key="enable_ant_hrm" android:summary="Selects whether or not to enable ANT heart rate monitor" android:defaultValue="false"/>
+        
         <ListPreference
                 android:key="sensor_sample_rate" android:entries="@array/sensor_sample_rate" android:entryValues="@array/sensor_sample_rate_values" android:dialogTitle="Shimmer sample rate" android:summary="Selects sample rate for shimmer devices" android:title="Shimmer sample rate"/>
         

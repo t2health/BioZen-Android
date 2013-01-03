@@ -67,16 +67,19 @@ import spine.SPINEManager;
 import spine.SPINESensorConstants;
 import spine.datamodel.Address;
 import spine.datamodel.Data;
+import spine.datamodel.HeartBeatData;
 import spine.datamodel.MindsetData;
 import spine.datamodel.Node;
 import spine.datamodel.ServiceMessage;
 import spine.datamodel.ShimmerData;
 import spine.datamodel.functions.ShimmerNonSpineSetupSensor;
 import android.app.AlertDialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
@@ -88,6 +91,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.telephony.TelephonyManager;
 import android.text.Spannable;
@@ -110,18 +114,22 @@ import com.t2.R;
 import com.t2.SpineReceiver;
 import com.t2.SpineReceiver.BioFeedbackStatus;
 import com.t2.SpineReceiver.OnBioFeedbackMessageRecievedListener;
+import com.t2.antlib.ANTPlusService;
+import com.t2.antlib.AntPlusManager;
 import com.t2.biofeedback.device.shimmer.ShimmerDevice;
 import com.t2.compassionUtils.MathExtra;
 import com.t2.compassionUtils.Util;
 
 
-public class Graphs1Activity extends BaseActivity implements OnBioFeedbackMessageRecievedListener, SPINEListener{
+public class Graphs1Activity extends BaseActivity implements OnBioFeedbackMessageRecievedListener, 
+	SPINEListener, AntPlusManager.Callbacks {
 	private static final String TAG = "BFDemo";
 	private static final String KEY_NAME = "results_visible_ids_16";	
 	private static final int BLUETOOTH_SETTINGS_ID = 987;	
 
 	private static final int HEARTRATE_SHIMMER = 1;	
 	private static final int HEARTRATE_ZEPHYR = 2;	
+	private static final int HEARTRATE_ANT = 3;	
 
 	private String mAppId = "bioZenGraphs";
 	
@@ -229,6 +237,8 @@ public class Graphs1Activity extends BaseActivity implements OnBioFeedbackMessag
 	int mRespRateIndex;
 
 	private boolean mDatabaseEnabled;
+	
+	private boolean mAntHrmEnabled;	
 	/**
 	 * Static names dealing with the external database
 	 */
@@ -237,6 +247,24 @@ public class Graphs1Activity extends BaseActivity implements OnBioFeedbackMessag
 	public static final String dDesignDocId = "_design/" + dDesignDocName;
 	public static final String byDateViewName = "byDate";
 
+	/** Class to manage all the ANT messaging and setup */
+	private AntPlusManager mAntManager;
+	   
+	private boolean mAntServiceBound;
+	   
+	/** Shared preferences data filename. */
+	public static final String PREFS_NAME = "ANTDemo1Prefs";	   
+	   
+	/** Pair to any device. */
+	static final short ANT_WILDCARD = 0;
+	   
+	/** The default proximity search bin. */
+	private static final byte ANT_DEFAULT_BIN = 7;
+	   
+	/** The default event buffering buffer threshold. */
+	private static final short ANT_DEFAULT_BUFFER_THRESHOLD = 0;	
+	
+	
 	
 	/**
 	 *  Right now we're using only one shimmer node for all shimmer devices
@@ -269,6 +297,15 @@ public class Graphs1Activity extends BaseActivity implements OnBioFeedbackMessag
                 
 		mLoggingEnabled = SharedPref.getBoolean(this, "enable_logging", 	true);
 		mDatabaseEnabled = SharedPref.getBoolean(this, "database_enabled", false);        
+		mAntHrmEnabled = SharedPref.getBoolean(this, "enable_ant_hrm", false);        
+		
+		if (mAntHrmEnabled) {
+			mHeartRateSource = HEARTRATE_ANT;
+		}
+		else {
+			mHeartRateSource = HEARTRATE_ZEPHYR;
+		}
+		
 		
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.US);
@@ -709,6 +746,12 @@ public class Graphs1Activity extends BaseActivity implements OnBioFeedbackMessag
 		}, 0, 10000);		
 		
 		
+		if (mAntHrmEnabled) {
+	        mAntServiceBound = bindService(new Intent(this, ANTPlusService.class), mConnection, BIND_AUTO_CREATE);
+		}
+		
+		
+		
 	}
 
 	@Override
@@ -716,6 +759,25 @@ public class Graphs1Activity extends BaseActivity implements OnBioFeedbackMessag
 		super.onStop();
 		if (mDataUpdateTimer != null)
 			mDataUpdateTimer.cancel();
+		
+        if(mAntManager != null)
+        {
+            saveAntState();
+            mAntManager.setCallbacks(null);
+            
+            if (mAntManager.isChannelOpen(AntPlusManager.HRM_CHANNEL))
+            {			
+           	 	Log.d(TAG, "onClick (HRM): Close channel");
+           	 	mAntManager.closeChannel(AntPlusManager.HRM_CHANNEL);                	
+            }            
+            
+            
+        }
+        if(mAntServiceBound)
+        {
+            unbindService(mConnection);
+        }		
+		
 		Log.i(TAG, this.getClass().getSimpleName() + ".onStop()"); 
 	}
 
@@ -774,6 +836,34 @@ public class Graphs1Activity extends BaseActivity implements OnBioFeedbackMessag
 		if (data != null) {
 			switch (data.getFunctionCode()) {
 
+			case SPINEFunctionConstants.HEARTBEAT: {
+				
+				synchronized(mKeysLock) {
+					
+					HeartBeatData thisData = (HeartBeatData) data; 
+					
+					int scaled  = (thisData.getBPM() )/2 ;
+					
+					if (mHeartRateSource == HEARTRATE_ANT) {
+						mBioParameters.get(heartRatePos).rawValue = thisData.getBPM();
+						mBioParameters.get(heartRatePos).scaledValue = scaled;	
+					}
+					
+			        // Send data to output
+					DataOutPacket packet = mDataOutHandler.new DataOutPacket();
+					packet.add(DataOutHandler.RAW_HEARTRATE, thisData.getBPM());
+					mDataOutHandler.handleDataOut(packet);					
+					
+    				// See if we are configured to update display every time we get sensor data
+    				if (mDisplaySampleRate == 9999 && mIsActive) {
+    					this.runOnUiThread(Timer_Tick);	    					
+    				}					
+					
+				}
+				
+				break;
+			}
+			
 			case SPINEFunctionConstants.SHIMMER: {
 				Node node = data.getNode();
 				numTicsWithoutData = 0;		
@@ -1244,6 +1334,9 @@ public class Graphs1Activity extends BaseActivity implements OnBioFeedbackMessag
 		    	
 		    	break;
 		    case R.id.buttonPause:
+		    	
+	            
+
 				if (mPaused == true) {
 					mPaused = false;
 					mPauseButton.getBackground().setColorFilter(Color.LTGRAY, PorterDuff.Mode.MULTIPLY);
@@ -1455,4 +1548,100 @@ public class Graphs1Activity extends BaseActivity implements OnBioFeedbackMessag
 		}
 		
 	}
+
+	
+	// ----------------------------------------------------------
+	// ANT specific stuff
+	//-----------------------------------------------------------
+	
+	@Override
+	public void errorCallback() {
+		Log.e(TAG, "ANT error");
+		
+	}
+
+	@Override
+	public void notifyAntStateChanged() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void notifyChannelStateChanged(byte channel) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void notifyChannelDataChanged(byte channel) {
+//		Log.i(TAG, "notifyChannelDataChanged");
+		
+    	HeartBeatData thisData = new HeartBeatData();
+    	thisData.setFunctionCode(SPINEFunctionConstants.HEARTBEAT);
+    	thisData.setBPM(mAntManager.getBPM());
+    	this.received(thisData);				            	
+	}
+	
+	
+
+	   private final ServiceConnection mConnection = new ServiceConnection()
+	   {
+	        @Override
+	        public void onServiceDisconnected(ComponentName name)
+	        {
+	            //This is very unlikely to happen with a local service (ie. one in the same process)
+	            mAntManager.setCallbacks(null);
+	            mAntManager = null;
+	        }
+	        
+	        @Override
+	        public void onServiceConnected(ComponentName name, IBinder service)
+	        {
+	            mAntManager = ((ANTPlusService.LocalBinder)service).getManager();
+	            mAntManager.setCallbacks(Graphs1Activity.this);
+	            loadAntState();
+	            notifyAntStateChanged();
+	            
+	            // Start ANT automatically
+	            mAntManager.doEnable();
+	    		Log.i(TAG, "Starting heart rate data");
+	            mAntManager.openChannel(AntPlusManager.HRM_CHANNEL, true);	
+	            mAntManager.requestReset(); 	            
+	            
+	        }
+	   };
+	
+		
+	   /**
+	    * Store application persistent data.
+	    */
+	   private void saveAntState()
+	   {
+	      // Save current Channel Id in preferences
+	      // We need an Editor object to make changes
+	      SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+	      SharedPreferences.Editor editor = settings.edit();
+	      editor.putInt("DeviceNumberHRM", mAntManager.getDeviceNumberHRM());
+	      editor.putInt("DeviceNumberSDM", mAntManager.getDeviceNumberSDM());
+	      editor.putInt("DeviceNumberWGT", mAntManager.getDeviceNumberWGT());
+	      editor.putInt("ProximityThreshold", mAntManager.getProximityThreshold());
+	      editor.putInt("BufferThreshold", mAntManager.getBufferThreshold());
+	      editor.commit();
+	   }
+	   
+	   /**
+	    * Retrieve application persistent data.
+	    */
+	   private void loadAntState()
+	   {
+	      // Restore preferences
+	      SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+	      mAntManager.setDeviceNumberHRM((short) settings.getInt("DeviceNumberHRM", ANT_WILDCARD));
+	      mAntManager.setDeviceNumberSDM((short) settings.getInt("DeviceNumberSDM", ANT_WILDCARD));
+	      mAntManager.setDeviceNumberWGT((short) settings.getInt("DeviceNumberWGT", ANT_WILDCARD));
+	      mAntManager.setProximityThreshold((byte) settings.getInt("ProximityThreshold", ANT_DEFAULT_BIN));
+	      mAntManager.setBufferThreshold((short) settings.getInt("BufferThreshold", ANT_DEFAULT_BUFFER_THRESHOLD));
+	   }
+	   		
+	
 }
