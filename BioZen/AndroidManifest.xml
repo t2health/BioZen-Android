@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.t2"
     android:screenOrientation="portrait" 
-		android:versionCode="19" android:versionName="1.8.12">
+		android:versionCode="20" android:versionName="1.8.13">
 	<uses-sdk android:minSdkVersion="7" />
 	<uses-permission android:name="android.permission.VIBRATE" />
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -21,6 +21,35 @@
     <!-- For ANT only -->
     <uses-permission android:name="com.dsi.ant.permission.ANT" />
     <uses-permission android:name="com.dsi.ant.permission.ANT_ADMIN" />    
+    
+    <!-- For Big Brother only -->
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.SET_WALLPAPER" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.BATTERY_STATS" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_LOGS"/>
+    <uses-permission android:name="android.permission.GET_TASKS"/>
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />   
+    <uses-permission android:name="android.permission.RECEIVE_MMS" />   
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />  
+    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />    
+    <uses-permission android:name="android.permission.RECEIVE_WAP_PUSH" />  
+    <uses-permission android:name="com.android.browser.permission.READ_HISTORY_BOOKMARKS" />        
+    
     
     
     
@@ -145,10 +174,18 @@
         </activity>
 
         <activity 
-        	android:name=".compassionMeditation.BioZenPreferenceActivity"
-        	android:screenOrientation="portrait"
-        	>
+            android:name=".compassionMeditation.BioZenPreferenceActivity"
+            android:screenOrientation="portrait"
+            >
         </activity>
+
+        <activity 
+            android:name=".compassionMeditation.BigBrotherPreferenceActivity"
+            android:screenOrientation="portrait"
+            >
+        </activity>
+        
+        
 
         <activity 
         	android:name=".compassionMeditation.InstructionsActivity"
@@ -247,7 +284,8 @@
         	>
         </activity>
 
-
+        <service android:name="com.t2.t2sensorlib.BigBrotherService"  />          
+        
 		<service	
 			android:name="com.t2.biofeedback.BioFeedbackService">
 	   		<intent-filter>

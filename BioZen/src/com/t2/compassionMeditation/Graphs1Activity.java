@@ -73,7 +73,9 @@ import spine.datamodel.Node;
 import spine.datamodel.ServiceMessage;
 import spine.datamodel.ShimmerData;
 import spine.datamodel.functions.ShimmerNonSpineSetupSensor;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -92,6 +94,7 @@ import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.telephony.TelephonyManager;
 import android.text.Spannable;
@@ -119,11 +122,13 @@ import com.t2.antlib.AntPlusManager;
 import com.t2.biofeedback.device.shimmer.ShimmerDevice;
 import com.t2.compassionUtils.MathExtra;
 import com.t2.compassionUtils.Util;
+import com.t2.t2sensorlib.BigBrotherService;
 
 
 public class Graphs1Activity extends BaseActivity implements OnBioFeedbackMessageRecievedListener, 
 	SPINEListener, AntPlusManager.Callbacks {
 	private static final String TAG = "BFDemo";
+	
 	private static final String KEY_NAME = "results_visible_ids_16";	
 	private static final int BLUETOOTH_SETTINGS_ID = 987;	
 
@@ -136,7 +141,17 @@ public class Graphs1Activity extends BaseActivity implements OnBioFeedbackMessag
 	private boolean mLogCatEnabled = true;
 	private boolean mLoggingEnabled = true;
 	private int mPrevSigQuality = 0;
-
+	private boolean mInternalSensorMonitoring = false;
+	
+	
+    /**
+     * Intent to start Big Brother service
+     */
+    private PendingIntent mBigBrotherService;	
+    private int mPollingPeriod = 30;					// seconds
+	private int mSecondsWithoutActivityThreshold = 5;	// seconds
+	private double mAccelerationThreshold = 12.0;		// m/s^2	
+    	
 	
 	/**
 	 * Application version info determined by the package manager
@@ -237,8 +252,8 @@ public class Graphs1Activity extends BaseActivity implements OnBioFeedbackMessag
 	int mRespRateIndex;
 
 	private boolean mDatabaseEnabled;
-	
 	private boolean mAntHrmEnabled;	
+
 	/**
 	 * Static names dealing with the external database
 	 */
@@ -298,6 +313,8 @@ public class Graphs1Activity extends BaseActivity implements OnBioFeedbackMessag
 		mLoggingEnabled = SharedPref.getBoolean(this, "enable_logging", 	true);
 		mDatabaseEnabled = SharedPref.getBoolean(this, "database_enabled", false);        
 		mAntHrmEnabled = SharedPref.getBoolean(this, "enable_ant_hrm", false);        
+		
+		mInternalSensorMonitoring = SharedPref.getBoolean(this, "inernal_sensor_monitoring_enabled", 	false);
 		
 		if (mAntHrmEnabled) {
 			mHeartRateSource = HEARTRATE_ANT;
@@ -526,6 +543,24 @@ public class Graphs1Activity extends BaseActivity implements OnBioFeedbackMessag
 		}    	
     	
     	
+		if (mInternalSensorMonitoring) {
+	        // IntentSender Launches our service scheduled with with the alarm manager 
+	        mBigBrotherService = PendingIntent.getService(Graphs1Activity.this,
+	                0, new Intent(Graphs1Activity.this, BigBrotherService.class), 0);        
+			
+	        
+            long firstTime = SystemClock.elapsedRealtime();	        
+            // Schedule the alarm!
+            AlarmManager am = (AlarmManager)getSystemService(ALARM_SERVICE);
+            am.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                            firstTime, mPollingPeriod * 1000, mBigBrotherService);
+
+            // Tell the user about what we did.
+            Toast.makeText(Graphs1Activity.this, R.string.service_scheduled,
+                    Toast.LENGTH_LONG).show();		    	
+	        
+		}
+		
         //testFIRFilter();
     	
 //    	testHR();
@@ -641,6 +676,23 @@ public class Graphs1Activity extends BaseActivity implements OnBioFeedbackMessag
 	protected void onDestroy() {
     	super.onDestroy();
 
+		if (mInternalSensorMonitoring) {
+            // And cancel the alarm.
+			AlarmManager am = (AlarmManager)getSystemService(ALARM_SERVICE);
+            am.cancel(mBigBrotherService);
+
+            
+			Intent intent = new Intent();
+			intent.setAction(BigBrotherConstants.ACTION_COMMAND_BROADCAST);
+			intent.putExtra("message", BigBrotherConstants.SERVICE_OFF);
+			sendBroadcast(intent);
+            
+            
+            // Tell the user about what we did.
+            Toast.makeText(Graphs1Activity.this, R.string.service_unscheduled,
+                    Toast.LENGTH_LONG).show();		
+		}    	
+    	
     	mDataOutHandler.close();
 			
 		if (mDataUpdateTimer != null) {

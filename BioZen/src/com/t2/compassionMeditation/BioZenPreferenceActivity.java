@@ -35,6 +35,7 @@ package com.t2.compassionMeditation;
 
 //Need the following import to get access to the app resources, since this
 //class is in a sub-package.
+
 import com.t2.R;
 import com.t2.biofeedback.BioFeedbackService;
 
@@ -45,12 +46,18 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.Preference;
+import android.preference.PreferenceScreen;
 import android.preference.Preference.OnPreferenceChangeListener;
+import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 import android.util.Log;
 import android.widget.Toast;
 
-public class BioZenPreferenceActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener, OnPreferenceChangeListener{
+
+
+
+public class BioZenPreferenceActivity extends PreferenceActivity 
+		implements OnSharedPreferenceChangeListener, OnPreferenceChangeListener, OnPreferenceClickListener {
     public static final String KEY_PREFERENCE = "change_user_mode_preference";
 
 	private static final String TAG = "BFDemo";    
@@ -58,10 +65,14 @@ public class BioZenPreferenceActivity extends PreferenceActivity implements OnSh
     String existingSessionLength;    
     String existingAlphaGain;    
     
+    // Shouldn't this point to settings_advanced_key in strings.xml
+    public static final String settings_advanced_key = "advanced";
+    
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
         
         //  Read default values and it they haven't been set, set them
         // so they show up in the first preferences screen
@@ -147,7 +158,15 @@ public class BioZenPreferenceActivity extends PreferenceActivity implements OnSh
         // Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.bio_zen_preferences);
         
-    
+
+    // Take care, the advance pref preference might be commented out in bio_sen_preferences.xml    
+    PreferenceScreen screen = this.getPreferenceScreen();
+	Preference preference = screen.findPreference( settings_advanced_key);
+	
+	if (preference != null) {
+		preference.setOnPreferenceClickListener(this);
+	}
+        
     }
 
     
@@ -292,5 +311,22 @@ public class BioZenPreferenceActivity extends PreferenceActivity implements OnSh
 	public boolean onPreferenceChange(Preference arg0, Object arg1) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+
+	@Override
+	public boolean onPreferenceClick(Preference preference) {
+		Intent userIntent = null;		
+		boolean handledClick = true;		
+		if (preference.getKey().equals( settings_advanced_key))
+		{
+			userIntent = new Intent(this, BigBrotherPreferenceActivity.class);
+		}
+		
+		if(userIntent != null) {
+			startActivity(userIntent);
+		}		
+		
+		return handledClick;
 	}
 }

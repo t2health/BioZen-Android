@@ -89,6 +89,11 @@
     
     <PreferenceCategory android:title="Advanced Preferences">
     
+        <Preference
+            android:key="@string/settings_advanced_key"
+            android:title="@string/settings_advanced_title"
+            android:summary="@string/settings_advanced_desc" /> 
+
         <CheckBoxPreference
                 android:title="Enable ANT HRM" android:key="enable_ant_hrm" android:summary="Selects whether or not to enable ANT heart rate monitor" android:defaultValue="false"/>
         
