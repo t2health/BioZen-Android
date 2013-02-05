@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="General">
+    
+         <CheckBoxPreference 
+             android:key="inernal_sensor_monitoring_enabled" 
+             android:title="Sensor Monitoring Enabled" 
+             android:summary="Enables Monitoring of internal phone sensors"
+             android:defaultValue="false"/>
+        
+        <EditTextPreference 
+            android:key="polling_period" 
+            android:title="Polling period (seconds)" 
+            android:summary="Number of seconds between service polling" 
+            android:defaultValue='30'
+         />
+
+         <EditTextPreference 
+            android:key="inactivity_timeout" 
+            android:title="Inactivity timeout (seconds)" 
+            android:summary="Number of seconds of inactivity before service timeout" 
+            android:defaultValue='5'
+         />
+
+         <EditTextPreference 
+            android:key="activity_threshold" 
+            android:title="Threshold for determining activity (m/s^2)" 
+            android:summary="Number of seconds of inactivity before service timeout" 
+            android:defaultValue='12'
+         />
+
+         <CheckBoxPreference 
+             android:key="keep_app_alive" 
+             android:title="Keep App Alive" 
+             android:summary="Prevents shutdown of app"
+             android:defaultValue="true"/>
+         
+         <CheckBoxPreference 
+             android:key="continous_service" 
+             android:title="Continous Service" 
+             android:summary="Causes service to run forever" android:enabled="true"
+             android:defaultValue="true"/>
+         
+         <CheckBoxPreference 
+             android:key="sampling_enabled" 
+             android:title="Periodic Sampling" 
+             android:summary="Determines whether or not periodic sampling is enabled" android:enabled="true"
+             android:defaultValue="true"/>
+         
+         
+
+         
+    </PreferenceCategory>
+         
+    <PreferenceCategory android:title="Sensors">
+    	<CheckBoxPreference android:key="accelerometer" android:title="Accelerometer" android:summary="Enable Accelerometer" android:defaultValue="true"/>
+        <CheckBoxPreference android:key="orientation" android:title="Orientation" android:summary="Enable Orientation" android:defaultValue="true"/>
+    	<CheckBoxPreference android:key="light" android:title="Light" android:summary="Enable Light" android:defaultValue="true"/>
+    	<CheckBoxPreference android:key="telephony" android:title="Telephony" android:summary="Enable Telephony" android:defaultValue="true"/>
+        <CheckBoxPreference android:key="proximity" android:title="Proximity" android:summary="Enable  Proximity" android:defaultValue="true"/>
+       	<CheckBoxPreference android:key="battery" android:title="Battery" android:summary="Enable Battery" android:defaultValue="true"/>
+        <CheckBoxPreference android:key="screen" android:title="Screen" android:summary="Enable Screen" android:defaultValue="true"/>
+    	<CheckBoxPreference android:key="locale" android:title="Locale" android:summary="Enable Locale" android:defaultValue="true"/>
+        <CheckBoxPreference android:key="model" android:title="Model" android:summary="Enable Model" android:defaultValue="true"/>
+       	<CheckBoxPreference android:key="location" android:title="Location" android:summary="Enable Location" android:defaultValue="true"/>
+        <CheckBoxPreference android:key="keylocked" android:title="Keylocked" android:summary="Enable Keylocked" android:defaultValue="true"/>
+    	<CheckBoxPreference android:key="taskslist" android:title="Tasks" android:summary="Enable Tasks" android:defaultValue="true"/>
+        <CheckBoxPreference android:key="bluetooth" android:title="Bluetooth" android:summary="Enable Bluetooth" android:defaultValue="true"/>
+        <CheckBoxPreference android:key="wifi" android:title="Wifi" android:summary="Enable Wifi" android:defaultValue="true"/>
+        <CheckBoxPreference android:key="phonecall" android:title="Phonecalls" android:summary="Enable Phonecalls" android:defaultValue="true"/>
+        <CheckBoxPreference android:key="smsmessage" android:title="SMS Messages" android:summary="Enable SMS Messages" android:defaultValue="true"/>
+        <CheckBoxPreference android:key="mmsmessage" android:title="MMS Messages" android:summary="Enable MMS Messages" android:defaultValue="true"/>
+        <CheckBoxPreference android:key="webpage" android:title="Web Page" android:summary="Enable Browser logging Messages" android:defaultValue="true"/>
+        </PreferenceCategory>
+        
+    
+    
+</PreferenceScreen>
