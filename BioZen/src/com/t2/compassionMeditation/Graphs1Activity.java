@@ -329,7 +329,7 @@ public class Graphs1Activity extends BaseActivity implements OnBioFeedbackMessag
 	   		String myNumber = telephonyManager.getLine1Number();
 	   		
 	   		String remoteDatabaseUri = SharedPref.getString(this, "database_sync_name", getString(R.string.database_uri));
-	   		remoteDatabaseUri += myNumber; 
+//	   		remoteDatabaseUri += myNumber; 
 	   		
 			Log.d(TAG, "Initializing database at " + remoteDatabaseUri); // TODO: remove
 			mDataOutHandler.initializeDatabase(dDatabaseName, dDesignDocName, dDesignDocId, byDateViewName, remoteDatabaseUri);
