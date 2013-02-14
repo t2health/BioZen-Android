@@ -81,6 +81,12 @@
         <item>HeartRate</item>
         <item>RespRate</item>
         <item>SkinTemp</item>
+        <item>EHealth Airflow</item>
+        <item>EHealth Temp</item>
+        <item>EHealth SpO2</item>
+        <item>EHealth Heartrate</item>
+        <item>EHealth GSR</item>
+        
     </string-array>	
 
     <string-array name="bands_of_interest_arrayvalues">
@@ -100,6 +106,11 @@
         <item>13</item>
         <item>14</item>
         <item>15</item>
+        <item>16</item>
+        <item>17</item>
+        <item>18</item>
+        <item>19</item>
+        <item>20</item>
         </string-array>	
 	
 

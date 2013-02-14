@@ -10,6 +10,11 @@
         <item>Heart Rate</item>
         <item>Resp Rate</item>
         <item>Skin Temp</item>
+        <item>EHealth Airflow</item>
+        <item>EHealth Temp</item>
+        <item>EHealth SpO2</item>
+        <item>EHealth Heartrate</item>
+        <item>EHealth GSR</item>
         </string-array>
 
     <string-array name="parameter_names_less_eeg">
@@ -20,7 +25,12 @@
         <item>Heart Rate</item>
         <item>Resp Rate</item>
         <item>Skin Temp</item>
-        </string-array>    
+        <item>EHealth Airflow</item>
+        <item>EHealth Temp</item>
+        <item>EHealth SpO2</item>
+        <item>EHealth Heartrate</item>
+        <item>EHealth GSR</item>
+     </string-array>    
     
         <string-array name="measure_select_dialog_items">
         <item>Delta</item>
