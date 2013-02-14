@@ -323,6 +323,13 @@ public class MeditationActivity extends BaseActivity
 	private int respRatePos;
 	private int skinTempPos;
 	
+	private int eHealthAirFlowPos;
+	private int eHealthTempPos;
+	private int eHealthSpO2Pos;
+	private int eHealthHeartRatePos;
+	private int eHealthGSRPos;
+	
+	
 	MindsetData currentMindsetData;
 	ZephyrData currentZephyrData = new ZephyrData();
 	
@@ -364,6 +371,11 @@ public class MeditationActivity extends BaseActivity
 	String mLogFileName = "";
 	
 	private Node mShimmerNode = null;
+	
+	/**
+	 * Node object for shimmer device as returned by spine
+	 */
+	public Node mSpineNode = null;	
 	
 	private boolean mDatabaseEnabled;
 	private boolean mAntHrmEnabled;	
@@ -553,6 +565,14 @@ public class MeditationActivity extends BaseActivity
 		mManager.getActiveNodes().add(zepherNode);
 		
 		
+		// The arduino node is programmed to look like a static Spine node
+		// Note that currently we don't have  to turn it on or off - it's always streaming
+		// Since Spine (in this case) is a static node we have to manually put it in the active node list
+		// Since the 
+		final int RESERVED_ADDRESS_ARDUINO_SPINE = 1;   // 0x0001
+		mSpineNode = new Node(new Address("" + RESERVED_ADDRESS_ARDUINO_SPINE));
+		mManager.getActiveNodes().add(mSpineNode);		
+				
                 
 		// Create a broadcast receiver. Note that this is used ONLY for command messages from the service
 		// All data from the service goes through the mail SPINE mechanism (received(Data data)).
@@ -628,6 +648,31 @@ public class MeditationActivity extends BaseActivity
         		skinTempPos = itemId;
         		param.isShimmer = false;
         	}
+        	
+        	if (paramName.equalsIgnoreCase("EHealth Airflow")) {
+        		eHealthAirFlowPos = itemId;
+        		param.isShimmer = false;
+        	}
+
+        	if (paramName.equalsIgnoreCase("EHealth Temp")) {
+        		eHealthTempPos = itemId;
+        		param.isShimmer = false;
+        	}
+
+        	if (paramName.equalsIgnoreCase("EHealth SpO2")) {
+        		eHealthSpO2Pos = itemId;
+        		param.isShimmer = false;
+        	}
+        	
+        	if (paramName.equalsIgnoreCase("EHealth Heartrate")) {
+        		eHealthHeartRatePos = itemId;
+        		param.isShimmer = false;
+        	}
+
+        	if (paramName.equalsIgnoreCase("EHealth GSR")) {
+        		eHealthGSRPos = itemId;
+        		param.isShimmer = false;
+        	}        	
         	
         	itemId++;
         	mBioParameters.add(param);
@@ -1016,6 +1061,52 @@ public class MeditationActivity extends BaseActivity
 		
 		if (data != null) {
 			switch (data.getFunctionCode()) {
+			
+			// E-Health board
+			case SPINEFunctionConstants.FEATURE: {
+				FeatureData featureData = (FeatureData) data;
+				
+				Feature[] feats = featureData.getFeatures();
+				
+				if (feats.length < 2) {
+					break;
+				}
+				Feature firsFeat = feats[0];
+				Feature Feat2 = feats[1];
+				int airFlow = firsFeat.getCh1Value();
+				int scaledTemp = firsFeat.getCh2Value();
+				float temp = (float)scaledTemp/(65535F/9F) + 29F;
+				int BPM = firsFeat.getCh3Value();
+				int SPO2 = firsFeat.getCh4Value();
+				int scaledConductance = Feat2.getCh1Value();
+				float conductance = (float) scaledConductance / (65535F/4F);
+				Log.d(TAG, "E-health Values = " + airFlow + ", " + temp + ", " + BPM + ", " + SPO2 + ", " + conductance + ", " );
+				synchronized(mKeysLock) {
+					mBioParameters.get(eHealthAirFlowPos).rawValue = airFlow;
+					mBioParameters.get(eHealthAirFlowPos).setScaledValue((int)((double)  map(airFlow,0,360,0,255) * mAlphaGain));
+					
+					mBioParameters.get(eHealthTempPos).rawValue = (int) temp;
+					mBioParameters.get(eHealthTempPos).setScaledValue((int)((double)  map(temp,29,40,0,255) * mAlphaGain));
+					
+					mBioParameters.get(eHealthHeartRatePos).rawValue = BPM;
+					mBioParameters.get(eHealthHeartRatePos).setScaledValue((int)((double)  map(BPM,30,220,0,255) * mAlphaGain));
+					
+					mBioParameters.get(eHealthSpO2Pos).rawValue = SPO2;
+					mBioParameters.get(eHealthSpO2Pos).setScaledValue((int)((double)  map(SPO2,0,100,0,255) * mAlphaGain));
+					
+					mBioParameters.get(eHealthGSRPos).rawValue = (int) map(scaledConductance,0,65535,0,100);
+					mBioParameters.get(eHealthGSRPos).setScaledValue((int)((double)  map(scaledConductance,0,65535,0,255) * mAlphaGain));
+				
+					DataOutPacket packet = mDataOutHandler.new DataOutPacket();
+					packet.add(DataOutHandler.RAW_HEARTRATE, BPM);
+					packet.add(DataOutHandler.RAW_GSR, conductance);
+					packet.add(DataOutHandler.RAW_SKINTEMP, temp);
+					packet.add(DataOutHandler.SPO2, SPO2);
+					packet.add(DataOutHandler.AIRFLOW, airFlow);
+					mDataOutHandler.handleDataOut(packet);						
+				}
+				break;
+			}			
 			
 			case SPINEFunctionConstants.HEARTBEAT: {
 				
@@ -1842,6 +1933,16 @@ public class MeditationActivity extends BaseActivity
 	      mAntManager.setDeviceNumberWGT((short) settings.getInt("DeviceNumberWGT", ANT_WILDCARD));
 	      mAntManager.setProximityThreshold((byte) settings.getInt("ProximityThreshold", ANT_DEFAULT_BIN));
 	      mAntManager.setBufferThreshold((short) settings.getInt("BufferThreshold", ANT_DEFAULT_BUFFER_THRESHOLD));
+	   }
+	   
+	   private long map(long x, long in_min, long in_max, long out_min, long out_max)
+	   {
+	     return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 	   }	
+
+	   private double map(double x, double in_min, double in_max, double out_min, double out_max)
+	   {
+	     return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+	   }	   
 	
 }

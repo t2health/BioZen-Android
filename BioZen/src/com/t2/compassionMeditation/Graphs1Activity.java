@@ -247,6 +247,12 @@ public class Graphs1Activity extends BaseActivity implements OnBioFeedbackMessag
 	private int heartRatePos;
 	private int respRatePos;
 	private int skinTempPos;
+
+	private int eHealthAirFlowPos;
+	private int eHealthTempPos;
+	private int eHealthSpO2Pos;
+	private int eHealthHeartRatePos;
+	private int eHealthGSRPos;
 	
 	boolean mIsActive = false;
 	
@@ -492,6 +498,31 @@ public class Graphs1Activity extends BaseActivity implements OnBioFeedbackMessag
         	
         	if (paramName.equalsIgnoreCase("skin temp")) {
         		skinTempPos = itemId;
+        		param.isShimmer = false;
+        	}
+        	
+        	if (paramName.equalsIgnoreCase("EHealth Airflow")) {
+        		eHealthAirFlowPos = itemId;
+        		param.isShimmer = false;
+        	}
+
+        	if (paramName.equalsIgnoreCase("EHealth Temp")) {
+        		eHealthTempPos = itemId;
+        		param.isShimmer = false;
+        	}
+
+        	if (paramName.equalsIgnoreCase("EHealth SpO2")) {
+        		eHealthSpO2Pos = itemId;
+        		param.isShimmer = false;
+        	}
+        	
+        	if (paramName.equalsIgnoreCase("EHealth Heartrate")) {
+        		eHealthHeartRatePos = itemId;
+        		param.isShimmer = false;
+        	}
+
+        	if (paramName.equalsIgnoreCase("EHealth GSR")) {
+        		eHealthGSRPos = itemId;
         		param.isShimmer = false;
         	}
         	
@@ -908,21 +939,49 @@ public class Graphs1Activity extends BaseActivity implements OnBioFeedbackMessag
 				FeatureData featureData = (FeatureData) data;
 				
 				Feature[] feats = featureData.getFeatures();
-				Feature firsFeat = feats[0];
 				
+				if (feats.length < 2) {
+					break;
+				}
+				Feature firsFeat = feats[0];
+				Feature Feat2 = feats[1];
 				int airFlow = firsFeat.getCh1Value();
 				int scaledTemp = firsFeat.getCh2Value();
 				float temp = (float)scaledTemp/(65535F/9F) + 29F;
 				int BPM = firsFeat.getCh3Value();
 				int SPO2 = firsFeat.getCh4Value();
+				int scaledConductance = Feat2.getCh1Value();
+				float conductance = (float) scaledConductance / (65535F/4F);
+				Log.d(TAG, "E-health Values = " + airFlow + ", " + temp + ", " + BPM + ", " + SPO2 + ", " + conductance + ", " );
+				synchronized(mKeysLock) {
+					mBioParameters.get(eHealthAirFlowPos).rawValue = airFlow;
+					mBioParameters.get(eHealthAirFlowPos).scaledValue = (int) map(airFlow,0,360,0,100);
+					
+					mBioParameters.get(eHealthTempPos).rawValue = (int) temp;
+					mBioParameters.get(eHealthTempPos).scaledValue = (int) map(temp,29,40,0,100);
+					
+					mBioParameters.get(eHealthHeartRatePos).rawValue = BPM;
+					mBioParameters.get(eHealthHeartRatePos).scaledValue = (int) map(BPM,30,220,0,100);
+					
+					mBioParameters.get(eHealthSpO2Pos).rawValue = SPO2;
+					mBioParameters.get(eHealthSpO2Pos).scaledValue = SPO2;
+					
+					mBioParameters.get(eHealthGSRPos).rawValue = (int) map(scaledConductance,0,65535,0,100);
+					mBioParameters.get(eHealthGSRPos).scaledValue = (int) map(scaledConductance,0,65535,0,100);;
 				
-				if (feats.length > 1) {
-					Feature Feat2 = feats[1];
-					int scaledConductance = Feat2.getCh1Value();
-					float conductance = (float) scaledConductance / (65535F/4F);
-//					Log.d(TAG, "Values = " + airFlow + ", " + scaledTemp + ", " + BPM + ", " + SPO2 + ", " + scaledConductance + ", " );
-					Log.d(TAG, "Values = " + airFlow + ", " + temp + ", " + BPM + ", " + SPO2 + ", " + conductance + ", " );
+					DataOutPacket packet = mDataOutHandler.new DataOutPacket();
+					packet.add(DataOutHandler.RAW_HEARTRATE, BPM);
+					packet.add(DataOutHandler.RAW_GSR, conductance);
+					packet.add(DataOutHandler.RAW_SKINTEMP, temp);
+					packet.add(DataOutHandler.SPO2, SPO2);
+					packet.add(DataOutHandler.AIRFLOW, airFlow);
+					mDataOutHandler.handleDataOut(packet);						
+					
+					
 				}
+				
+				
+				
 				break;
 			}
 			
@@ -1424,10 +1483,8 @@ public class Graphs1Activity extends BaseActivity implements OnBioFeedbackMessag
 				alert.show();
 		    	
 		    	break;
-		    case R.id.buttonPause:
-		    	
-	            
 
+		    case R.id.buttonPause:
 				if (mPaused == true) {
 					mPaused = false;
 					mPauseButton.getBackground().setColorFilter(Color.LTGRAY, PorterDuff.Mode.MULTIPLY);
@@ -1734,5 +1791,13 @@ public class Graphs1Activity extends BaseActivity implements OnBioFeedbackMessag
 	      mAntManager.setBufferThreshold((short) settings.getInt("BufferThreshold", ANT_DEFAULT_BUFFER_THRESHOLD));
 	   }
 	   		
-	
+	   private long map(long x, long in_min, long in_max, long out_min, long out_max)
+	   {
+	     return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+	   }	
+
+	   private double map(double x, double in_min, double in_max, double out_min, double out_max)
+	   {
+	     return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+	   }	
 }
