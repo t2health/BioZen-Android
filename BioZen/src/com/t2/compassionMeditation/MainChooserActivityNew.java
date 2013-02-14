@@ -66,8 +66,11 @@ import android.widget.Gallery.LayoutParams;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+//import com.example.h2authtest.LoginActivity;
 import com.t2.R;
 import com.t2.filechooser.FileChooser;
+import com.t2auth.AuthUtils;
+import com.t2auth.AuthUtils.T2LogoutTask;
 
 public class MainChooserActivityNew extends Activity implements OnTouchListener, SimpleGestureListener {
 	private static final String TAG = "BFDemo";	
@@ -93,6 +96,7 @@ public class MainChooserActivityNew extends Activity implements OnTouchListener,
 	private static final int ID_PREFERENCES = 6;
 	private static final int ID_VIEW_FILES = 7;
 	private static final int ID_ABOUT = 8;
+	private static final int ID_REGISTER = 9;
 	
     // Resources for gallery (scrolling selection bar at bottom
 	private Integer[] mThumbIds = {
@@ -104,7 +108,8 @@ public class MainChooserActivityNew extends Activity implements OnTouchListener,
             R.drawable.biozen_bluetooth_settings,
             R.drawable.biozen_preferences,
             R.drawable.biozen_view_files,
-            R.drawable.biozen_about
+            R.drawable.biozen_about,
+            R.drawable.biozen_register,
     };    
     
 	// Resources for main screen help
@@ -140,7 +145,8 @@ public class MainChooserActivityNew extends Activity implements OnTouchListener,
 	boolean mHelpOnStartup;
 	Button mHideButton;
 	int mLatestMotionEvent = 0;
-	
+    private T2LogoutTask mLogoutTask = null;
+
     @Override
 	public boolean onTouchEvent(MotionEvent event) {
 		// TODO Auto-generated method stub
@@ -158,6 +164,11 @@ public class MainChooserActivityNew extends Activity implements OnTouchListener,
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
+        
+		// Clear the ticket granting ticket to make sure we start fresh
+		AuthUtils.clearTicketGrantingTicket(this);
+		
+        
         Log.i(TAG, this.getClass().getSimpleName() + ".onCreate()"); 	        
         mInstance = this;
         getWindowManager().getDefaultDisplay().getMetrics(mDisplayMetrics);        
@@ -236,6 +247,41 @@ public class MainChooserActivityNew extends Activity implements OnTouchListener,
 		mCardIndex = -1;
 		NextCard();		
 	}
+
+	
+	
+	@Override
+	protected void onDestroy() {
+		
+		boolean databaseEnabled = SharedPref.getBoolean(this, "database_enabled", false);
+		if (mLogoutTask == null && databaseEnabled) {
+		
+	        mLogoutTask = new T2LogoutTask(AuthUtils.getSslContext(this).getSocketFactory(),
+	                AuthUtils.getTicketGrantingTicket(this)) {
+	
+	            @Override
+	            protected void onLogoutSuccess() {
+	                logout();
+	            }
+	
+	            @Override
+	            protected void onLogoutFailed() {
+	                logout();
+	            }
+	        };
+	        mLogoutTask.execute((Void) null);		
+		}			
+		
+		databaseEnabled = false;
+      
+		super.onDestroy();
+	}
+
+	void logout() {
+		AuthUtils.clearServiceTicket(this);
+		AuthUtils.clearTicketGrantingTicket(this);
+		mLogoutTask = null;
+	}		
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -526,6 +572,12 @@ public class MainChooserActivityNew extends Activity implements OnTouchListener,
 				alert.setTitle("About");
 				alert.setMessage(content);	
 				alert.show();			
+	    		
+	    		break;
+
+	    	case ID_REGISTER:
+				intent = new Intent(this, LoginActivity.class);			
+				this.startActivity(intent);		    		
 	    		
 	    		break;
 		}

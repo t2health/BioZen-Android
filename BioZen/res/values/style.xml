@@ -32,4 +32,10 @@
     	<item name="android:layout_marginBottom">10dip</item>
     	<item name="android:background">@android:drawable/divider_horizontal_bright</item>
     </style>
+    
+    <style name="LoginFormContainer">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">16dp</item>
+    </style>    
 </resources>

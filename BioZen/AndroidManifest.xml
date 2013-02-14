@@ -231,6 +231,20 @@
 			android:screenOrientation="portrait"
         	>
         </activity>
+
+        <activity 
+            android:name=".compassionMeditation.LoginActivity"
+            android:screenOrientation="portrait"
+            >
+        </activity>
+        
+        <activity 
+            android:name="com.example.h2authtest.SecuredActivity"
+            android:screenOrientation="portrait"
+            >
+        </activity>
+        
+        
                 
 		<!--
 			Receivers and Services 

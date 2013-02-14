@@ -371,7 +371,7 @@ public class MeditationActivity extends BaseActivity
 	/**
 	 * Static names dealing with the external database
 	 */
-	public static final String dDatabaseName = "bigbrother-sync";
+	public static final String dDatabaseName = "";
 	public static final String dDesignDocName = "bigbrother-local";
 	public static final String dDesignDocId = "_design/" + dDesignDocName;
 	public static final String byDateViewName = "byDate";

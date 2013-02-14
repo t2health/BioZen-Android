@@ -1,0 +1,29 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/menu_delete_tgt"
+        android:icon="@android:drawable/ic_menu_delete"
+        android:orderInCategory="100"
+        android:title="Remove Session Ticket"/>
+    <item
+        android:id="@+id/menu_logout"
+        android:icon="@android:drawable/ic_menu_delete"
+        android:orderInCategory="100"
+        android:title="Logout"/>
+    <item
+        android:id="@+id/menu_request_st"
+        android:icon="@android:drawable/ic_menu_revert"
+        android:orderInCategory="100"
+        android:title="Request ST"/>
+    <item
+        android:id="@+id/menu_request_data"
+        android:icon="@android:drawable/ic_menu_rotate"
+        android:orderInCategory="100"
+        android:title="Refresh Data"/>
+    <item
+        android:id="@+id/menu_post_data"
+        android:icon="@android:drawable/ic_menu_save"
+        android:orderInCategory="100"
+        android:title="Add Data"/>
+
+</menu>

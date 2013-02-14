@@ -67,6 +67,8 @@ import spine.SPINEManager;
 import spine.SPINESensorConstants;
 import spine.datamodel.Address;
 import spine.datamodel.Data;
+import spine.datamodel.Feature;
+import spine.datamodel.FeatureData;
 import spine.datamodel.HeartBeatData;
 import spine.datamodel.MindsetData;
 import spine.datamodel.Node;
@@ -123,6 +125,7 @@ import com.t2.biofeedback.device.shimmer.ShimmerDevice;
 import com.t2.compassionUtils.MathExtra;
 import com.t2.compassionUtils.Util;
 import com.t2.t2sensorlib.BigBrotherService;
+import com.t2auth.AuthUtils;
 
 
 public class Graphs1Activity extends BaseActivity implements OnBioFeedbackMessageRecievedListener, 
@@ -226,6 +229,11 @@ public class Graphs1Activity extends BaseActivity implements OnBioFeedbackMessag
 	
 	private Node mShimmerNode = null;
 	
+	/**
+	 * Node object for shimmer device as returned by spine
+	 */
+	public Node mSpineNode = null;	
+	
 	private int numTicsWithoutData = 0;
 	private static Object mKeysLock = new Object();
 	private static Object mRespRateAverageLock = new Object();
@@ -257,7 +265,7 @@ public class Graphs1Activity extends BaseActivity implements OnBioFeedbackMessag
 	/**
 	 * Static names dealing with the external database
 	 */
-	public static final String dDatabaseName = "bigbrother-sync";
+	public static final String dDatabaseName = "";
 	public static final String dDesignDocName = "bigbrother-local";
 	public static final String dDesignDocId = "_design/" + dDesignDocName;
 	public static final String byDateViewName = "byDate";
@@ -434,7 +442,7 @@ public class Graphs1Activity extends BaseActivity implements OnBioFeedbackMessag
         eegPos = itemId; // eeg always comes first
         mBioParameters.clear();
         
-        // First create GraphBioParameters for each of the ECG static params (ie mindset)
+        // First create GraphBioParameters for each of the EEG static params (ie mindset)
         for (itemId = 0; itemId < MindsetData.NUM_BANDS + 2; itemId++) {		// 2 extra, for attention and meditation
         	GraphBioParameter param = new GraphBioParameter(itemId, MindsetData.spectralNames[itemId], "", true);
         	param.isShimmer = false;
@@ -501,6 +509,13 @@ public class Graphs1Activity extends BaseActivity implements OnBioFeedbackMessag
 		mManager.getActiveNodes().add(zepherNode);
 		
 		
+		// The arduino node is programmed to look like a static Spine node
+		// Note that currently we don't have  to turn it on or off - it's always streaming
+		// Since Spine (in this case) is a static node we have to manually put it in the active node list
+		// Since the 
+		final int RESERVED_ADDRESS_ARDUINO_SPINE = 1;   // 0x0001
+		mSpineNode = new Node(new Address("" + RESERVED_ADDRESS_ARDUINO_SPINE));
+		mManager.getActiveNodes().add(mSpineNode);		
 		
     	
 		final String sessionName;
@@ -888,6 +903,30 @@ public class Graphs1Activity extends BaseActivity implements OnBioFeedbackMessag
 		if (data != null) {
 			switch (data.getFunctionCode()) {
 
+			// E-Health board
+			case SPINEFunctionConstants.FEATURE: {
+				FeatureData featureData = (FeatureData) data;
+				
+				Feature[] feats = featureData.getFeatures();
+				Feature firsFeat = feats[0];
+				
+				int airFlow = firsFeat.getCh1Value();
+				int scaledTemp = firsFeat.getCh2Value();
+				float temp = (float)scaledTemp/(65535F/9F) + 29F;
+				int BPM = firsFeat.getCh3Value();
+				int SPO2 = firsFeat.getCh4Value();
+				
+				if (feats.length > 1) {
+					Feature Feat2 = feats[1];
+					int scaledConductance = Feat2.getCh1Value();
+					float conductance = (float) scaledConductance / (65535F/4F);
+//					Log.d(TAG, "Values = " + airFlow + ", " + scaledTemp + ", " + BPM + ", " + SPO2 + ", " + scaledConductance + ", " );
+					Log.d(TAG, "Values = " + airFlow + ", " + temp + ", " + BPM + ", " + SPO2 + ", " + conductance + ", " );
+				}
+				break;
+			}
+			
+			
 			case SPINEFunctionConstants.HEARTBEAT: {
 				
 				synchronized(mKeysLock) {
@@ -1360,7 +1399,7 @@ public class Graphs1Activity extends BaseActivity implements OnBioFeedbackMessag
 					measureNames[i++] = item.title1;
 				}
 				
-				// Present dialog to allow user to choose shich parameters to view in this activity
+				// Present dialog to allow user to choose which parameters to view in this activity
 		    	AlertDialog.Builder alert = new AlertDialog.Builder(this);
 		    	alert.setTitle(R.string.alert_dialog_measure_selector);
 //		    	alert.setMultiChoiceItems(R.array.measure_select_dialog_items,
