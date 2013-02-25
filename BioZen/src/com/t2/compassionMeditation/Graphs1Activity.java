@@ -339,18 +339,19 @@ public class Graphs1Activity extends BaseActivity implements OnBioFeedbackMessag
 		
 		
 
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.US);
-		String sessionDate = sdf.format(new Date());
-		String userId = SharedPref.getString(this, "SelectedUser", 	"");
-		long sessionId = SharedPref.getLong(this, "bio_session_start_time", 0);
-
-		Calendar cal = Calendar.getInstance();						
 		// The session start time will be used as session id
 		// Note this also sets session start time
 		// **** This session ID will be prepended to all JSON data stored
 		//      in the external database until it's changed (by the start
 		//		of a new session.
+		Calendar cal = Calendar.getInstance();						
 		SharedPref.setBioSessionId(sharedPref, cal.getTimeInMillis());		
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.US);
+		String sessionDate = sdf.format(new Date());
+		String userId = SharedPref.getString(this, "SelectedUser", 	"");
+		long sessionId = SharedPref.getLong(this, "bio_session_start_time", 0);
+
 		
 		
 		mDataOutHandler = new DataOutHandler(this, userId,sessionDate, mAppId, DataOutHandler.DATA_TYPE_EXTERNAL_SENSOR, sessionId );
@@ -367,7 +368,6 @@ public class Graphs1Activity extends BaseActivity implements OnBioFeedbackMessag
 		}			
 		
 		
-		//mDataOutHandler = new DataOutHandler(this, userId,sessionDate, mAppId );
 		mBioDataProcessor.initialize(mDataOutHandler);
 		
 		

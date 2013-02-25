@@ -37,6 +37,7 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -678,8 +679,18 @@ public class MeditationActivity extends BaseActivity
         	mBioParameters.add(param);
     	}
         
+		// The session start time will be used as session id
+		// Note this also sets session start time
+		// **** This session ID will be prepended to all JSON data stored
+		//      in the external database until it's changed (by the start
+		//		of a new session.
+		Calendar cal = Calendar.getInstance();						
+		SharedPref.setBioSessionId(sharedPref, cal.getTimeInMillis());		
+
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.US);
-		mSessionId = sdf.format(new Date());
+		String sessionDate = sdf.format(new Date());    	
+		long sessionId = SharedPref.getLong(this, "bio_session_start_time", 0);    	
+    	
     	mUserId  = SharedPref.getString(this, "SelectedUser", 	"");
 		
 		// Now get the database object associated with this user
@@ -731,7 +742,7 @@ public class MeditationActivity extends BaseActivity
 		}
 		
 		
-		mDataOutHandler = new DataOutHandler(this, mUserId,mSessionId, mAppId );
+		mDataOutHandler = new DataOutHandler(this, mUserId,sessionDate, mAppId, DataOutHandler.DATA_TYPE_EXTERNAL_SENSOR, sessionId );
 		
 		if (mDatabaseEnabled) {
 			TelephonyManager telephonyManager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
