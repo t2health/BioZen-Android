@@ -122,7 +122,7 @@ public class BioDataProcessor {
 		// Send data to output
 		DataOutPacket packet = mDataOutHandler.new DataOutPacket();
 		packet.add(DataOutHandler.SENSOR_TIME_STAMP, shimmerData.timestamp);
-		packet.add(DataOutHandler.RAW_GSR, mGsrConductance, "%2.2f");
+		packet.add(DataOutHandler.RAW_GSR, mGsrConductance, "%2.4f");
 		mDataOutHandler.handleDataOut(packet);
 		
 		// Handle logging of average GSR every 1 second
@@ -131,7 +131,7 @@ public class BioDataProcessor {
 			// We get here once every second
 	        // Send data to output
 			packet = mDataOutHandler.new DataOutPacket();
-			packet.add(DataOutHandler.AVERAGE_GSR, mGgsrAvg, "%2.2f");
+			packet.add(DataOutHandler.AVERAGE_GSR, mGgsrAvg, "%2.4f");
 			mDataOutHandler.handleDataOut(packet);
 		}
 	} // End processShimmerGSR(ShimmerData shimmerData, int configuredGSRRange)
@@ -227,15 +227,15 @@ public class BioDataProcessor {
 		int batLevel = firsFeat.getCh1Value();
 		mZephyrHeartRate = firsFeat.getCh2Value();
 		mRespRate = firsFeat.getCh3Value() / 10;
-		int skinTemp = firsFeat.getCh4Value() / 10;
-		mSkinTempF = (skinTemp * 9 / 5) + 32;			
+		double skinTemp = firsFeat.getCh4Value() / 10;
+		mSkinTempF = (skinTemp * 9F / 5F) + 32F;			
 		
 		
         // Send data to output
 		DataOutPacket packet = mDataOutHandler.new DataOutPacket();
 		packet.add(DataOutHandler.RAW_HEARTRATE, mZephyrHeartRate);
 		packet.add(DataOutHandler.RAW_RESP_RATE, (int) mRespRate);
-		packet.add(DataOutHandler.RAW_SKINTEMP, (int) mSkinTempF);
+		packet.add(DataOutHandler.RAW_SKINTEMP, mSkinTempF, "%2.1f");
 		mDataOutHandler.handleDataOut(packet);				
 		
 	} // End processZephyr(ShimmerData shimmerData)
