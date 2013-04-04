@@ -99,6 +99,12 @@
         <item>125</item>
     </string-array>
     
+    <string-array name="external_database_types">
+        <item>AWS</item>
+        <item>T2 Rest</item>
+    </string-array>
+
+    
     
     
     <string-array name="audio_selection_array">

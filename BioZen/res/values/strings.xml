@@ -241,6 +241,7 @@ External Links: The appearance of external hyperlinks does not constitute endors
 	]]></string>    
     
 <string name="database_uri"></string> 
+<string name="aws_table"></string> 
 <string name="saveddatabase_uri">http://ec2-50-112-197-66.us-west-2.compute.amazonaws.com/mongo/json.php</string>    
 	
 <string name="settings_advanced_key">advanced</string>

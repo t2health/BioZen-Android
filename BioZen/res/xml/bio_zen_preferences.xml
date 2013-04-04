@@ -115,6 +115,11 @@
                 android:title="Enable External Database" android:key="database_enabled" android:summary="Selects whether or not to enable sending to external database" android:defaultValue="false"/>
         
         <EditTextPreference android:key="database_sync_name" android:summary="URL of external database to sync to" android:title="External Database" android:defaultValue="@string/database_uri"></EditTextPreference>
+
+        <ListPreference
+                android:key="external_database_type" android:entries="@array/external_database_types" android:entryValues="@array/external_database_types" android:dialogTitle="External Database Type" android:summary="Selects External Database Type" android:title="External Database Type"/>
+        
+        
         
     </PreferenceCategory>
     

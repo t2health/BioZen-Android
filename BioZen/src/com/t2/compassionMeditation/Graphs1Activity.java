@@ -125,7 +125,6 @@ import com.t2.biofeedback.device.shimmer.ShimmerDevice;
 import com.t2.compassionUtils.MathExtra;
 import com.t2.compassionUtils.Util;
 import com.t2.t2sensorlib.BigBrotherService;
-import com.t2auth.AuthUtils;
 
 
 public class Graphs1Activity extends BaseActivity implements OnBioFeedbackMessageRecievedListener, 
@@ -692,6 +691,11 @@ public class Graphs1Activity extends BaseActivity implements OnBioFeedbackMessag
 		    
 		}
 		
+		try {
+			logReader.close();
+		} catch (IOException e) {
+		    Log.e(TAG, "Could not close file " + e.getMessage());
+		}
 		
 		return true;
 	}
