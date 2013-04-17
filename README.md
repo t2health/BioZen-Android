@@ -3,6 +3,13 @@ BioZen
 
 [Official Site: http://www.t2health.org](http://t2health.org)
 
+**Note for cloning project:
+	BioZen used to contain three sub-modules. Checking it out put the sub-modules as children to BioZen when they should be siblings (because other projects use them)
+	To obtain all of the code for BioZen you must clone the following repositories:
+		https://github.com/t2health/BioZen-Android (This module)
+		https://github.com/t2health/BSPAN---Bluetooth-Sensor-Processing-for-Android
+		https://github.com/t2health/T2AndroidLib-SG		
+		https://github.com/t2health/T2SensorLib-Android	
 
 BioZen is one of the first mobile applications to provide users with live biofeedback data from multiple wearable body sensors covering a range of biophysiological signals, including electroencephalogram (EEG), electromyography (EMG), galvanic skin response (GSR), electrocardiogram (ECG or EKG), respiratory rate, and temperature biofeedback data and display it on a mobile phone.
 
