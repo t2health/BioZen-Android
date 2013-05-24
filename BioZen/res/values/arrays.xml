@@ -101,8 +101,9 @@
     
     <string-array name="external_database_types">
         <item>AWS</item>
-        <item>T2 Rest</item>
-    </string-array>
+        <item>T2Rest</item>
+        <item>T2DRUPAL</item>
+        </string-array>
 
     
     

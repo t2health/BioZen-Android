@@ -52,7 +52,9 @@ import org.json.JSONObject;
 import org.t2health.lib1.BioParameter;
 import org.t2health.lib1.BioSensor;
 import org.t2health.lib1.DataOutHandler;
+import org.t2health.lib1.DataOutHandlerTags;
 import org.t2health.lib1.DataOutHandler.DataOutPacket;
+import org.t2health.lib1.DataOutHandlerException;
 import org.t2health.lib1.dsp.T2MovingAverageFilter;
 
 import bz.org.t2health.lib.activity.BaseActivity;
@@ -752,7 +754,13 @@ public class MeditationActivity extends BaseActivity
 //	   		remoteDatabaseUri += myNumber; 
 	   		
 			Log.d(TAG, "Initializing database at " + remoteDatabaseUri); // TODO: remove
-			mDataOutHandler.initializeDatabase(dDatabaseName, dDesignDocName, dDesignDocId, byDateViewName, remoteDatabaseUri);
+			try {
+				mDataOutHandler.initializeDatabase(dDatabaseName, dDesignDocName, dDesignDocId, byDateViewName, remoteDatabaseUri);
+			} catch (DataOutHandlerException e) {
+				Log.e(TAG, e.toString());
+				e.printStackTrace();
+			}
+			mDataOutHandler.setRequiresAuthentication(false);			
 		}			
 				
 		
@@ -788,8 +796,13 @@ public class MeditationActivity extends BaseActivity
 			String versionString = mAppId + " application version: " + mApplicationVersion;
 
 			DataOutPacket packet = mDataOutHandler.new DataOutPacket();
-			packet.add("version", versionString);
-			mDataOutHandler.handleDataOut(packet);				
+			packet.add(DataOutHandlerTags.version, versionString);
+			try {
+				mDataOutHandler.handleDataOut(packet);
+			} catch (DataOutHandlerException e) {
+				Log.e(TAG, e.toString());
+				e.printStackTrace();
+			}				
 
 		}
 		catch (NameNotFoundException e) {
@@ -1109,12 +1122,17 @@ public class MeditationActivity extends BaseActivity
 					mBioParameters.get(eHealthGSRPos).setScaledValue((int)((double)  map(scaledConductance,0,65535,0,255) * mAlphaGain));
 				
 					DataOutPacket packet = mDataOutHandler.new DataOutPacket();
-					packet.add(DataOutHandler.RAW_HEARTRATE, BPM);
-					packet.add(DataOutHandler.RAW_GSR, conductance);
-					packet.add(DataOutHandler.RAW_SKINTEMP, temp);
-					packet.add(DataOutHandler.SPO2, SPO2);
-					packet.add(DataOutHandler.AIRFLOW, airFlow);
-					mDataOutHandler.handleDataOut(packet);						
+					packet.add(DataOutHandlerTags.RAW_HEARTRATE, BPM);
+					packet.add(DataOutHandlerTags.RAW_GSR, conductance);
+					packet.add(DataOutHandlerTags.RAW_SKINTEMP, temp);
+					packet.add(DataOutHandlerTags.SPO2, SPO2);
+					packet.add(DataOutHandlerTags.AIRFLOW, airFlow);
+					try {
+						mDataOutHandler.handleDataOut(packet);
+					} catch (DataOutHandlerException e) {
+						Log.e(TAG, e.toString());
+						e.printStackTrace();
+					}						
 				}
 				break;
 			}			
@@ -1134,8 +1152,13 @@ public class MeditationActivity extends BaseActivity
 					
 			        // Send data to output
 					DataOutPacket packet = mDataOutHandler.new DataOutPacket();
-					packet.add(DataOutHandler.RAW_HEARTRATE, thisData.getBPM());
-					mDataOutHandler.handleDataOut(packet);					
+					packet.add(DataOutHandlerTags.RAW_HEARTRATE, thisData.getBPM());
+					try {
+						mDataOutHandler.handleDataOut(packet);
+					} catch (DataOutHandlerException e) {
+						Log.e(TAG, e.toString());
+						e.printStackTrace();
+					}					
 
 				}
 				
@@ -1408,7 +1431,12 @@ public class MeditationActivity extends BaseActivity
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
 			String currentDateTimeString = DateFormat.getDateInstance().format(new Date());				
 			currentDateTimeString = sdf.format(new Date());
-	    	mDataOutHandler.logNote(currentDateTimeString + ", " + currentDateTimeString);			
+	    	try {
+				mDataOutHandler.logNote(currentDateTimeString + ", " + currentDateTimeString);
+			} catch (DataOutHandlerException e) {
+				Log.e(TAG, e.toString());
+				e.printStackTrace();
+			}			
 			
 
 			// Foreground parameters
@@ -1635,7 +1663,12 @@ public class MeditationActivity extends BaseActivity
 		
 		String currentDateTimeString = DateFormat.getDateInstance().format(new Date());				
 		currentDateTimeString = sdf.format(new Date());
-    	mDataOutHandler.logNote(currentDateTimeString + ", " + note + "\n");                	
+    	try {
+			mDataOutHandler.logNote(currentDateTimeString + ", " + note + "\n");
+		} catch (DataOutHandlerException e) {
+			Log.e(TAG, e.toString());
+			e.printStackTrace();
+		}                	
 	}
 	
 	@Override

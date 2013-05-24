@@ -60,6 +60,9 @@ import org.t2health.lib1.BioParameter;
 import org.t2health.lib1.BioSensor;
 import org.t2health.lib1.DataOutHandler;
 import org.t2health.lib1.DataOutHandler.DataOutPacket;
+import org.t2health.lib1.DataOutHandlerException;
+import org.t2health.lib1.DataOutHandlerTags;
+
 import spine.SPINEFactory;
 import spine.SPINEFunctionConstants;
 import spine.SPINEListener;
@@ -363,7 +366,14 @@ public class Graphs1Activity extends BaseActivity implements OnBioFeedbackMessag
 //	   		remoteDatabaseUri += myNumber; 
 	   		
 			Log.d(TAG, "Initializing database at " + remoteDatabaseUri); // TODO: remove
-			mDataOutHandler.initializeDatabase(dDatabaseName, dDesignDocName, dDesignDocId, byDateViewName, remoteDatabaseUri);
+			try {
+				mDataOutHandler.initializeDatabase(dDatabaseName, dDesignDocName, dDesignDocId, byDateViewName, remoteDatabaseUri);
+			} catch (DataOutHandlerException e) {
+				Log.e(TAG, e.toString());
+				e.printStackTrace();
+			}
+			mDataOutHandler.setRequiresAuthentication(false);
+			
 		}			
 		
 		
@@ -386,8 +396,13 @@ public class Graphs1Activity extends BaseActivity implements OnBioFeedbackMessag
 			String versionString = mAppId + " application version: " + mApplicationVersion;
 
 			DataOutPacket packet = mDataOutHandler.new DataOutPacket();
-			packet.add("version", versionString);
-			mDataOutHandler.handleDataOut(packet);				
+			packet.add(DataOutHandlerTags.version, versionString);
+			try {
+				mDataOutHandler.handleDataOut(packet);
+			} catch (DataOutHandlerException e) {
+				Log.e(TAG, e.toString());
+				e.printStackTrace();
+			}				
 
 		}
 		catch (NameNotFoundException e) {
@@ -565,7 +580,12 @@ public class Graphs1Activity extends BaseActivity implements OnBioFeedbackMessag
 	                public void onClick(DialogInterface dialog, int whichButton) {
 
 	                	
-	                	mDataOutHandler.logNote("Replaying data from session " + sessionName);     
+	                	try {
+							mDataOutHandler.logNote("Replaying data from session " + sessionName);
+						} catch (DataOutHandlerException e) {
+							Log.e(TAG, e.toString());
+							e.printStackTrace();
+						}     
 	                	
 	        			
 	        			replaySessionData(sessionName);
@@ -974,12 +994,17 @@ public class Graphs1Activity extends BaseActivity implements OnBioFeedbackMessag
 					mBioParameters.get(eHealthGSRPos).scaledValue = (int) map(scaledConductance,0,65535,0,100);;
 				
 					DataOutPacket packet = mDataOutHandler.new DataOutPacket();
-					packet.add(DataOutHandler.RAW_HEARTRATE, BPM);
-					packet.add(DataOutHandler.RAW_GSR, conductance);
-					packet.add(DataOutHandler.RAW_SKINTEMP, temp);
-					packet.add(DataOutHandler.SPO2, SPO2);
-					packet.add(DataOutHandler.AIRFLOW, airFlow);
-					mDataOutHandler.handleDataOut(packet);						
+					packet.add(DataOutHandlerTags.RAW_HEARTRATE, BPM);
+					packet.add(DataOutHandlerTags.RAW_GSR, conductance);
+					packet.add(DataOutHandlerTags.RAW_SKINTEMP, temp);
+					packet.add(DataOutHandlerTags.SPO2, SPO2);
+					packet.add(DataOutHandlerTags.AIRFLOW, airFlow);
+					try {
+						mDataOutHandler.handleDataOut(packet);
+					} catch (DataOutHandlerException e) {
+						Log.e(TAG, e.toString());
+						e.printStackTrace();
+					}						
 					
 					
 				}
@@ -1005,8 +1030,13 @@ public class Graphs1Activity extends BaseActivity implements OnBioFeedbackMessag
 					
 			        // Send data to output
 					DataOutPacket packet = mDataOutHandler.new DataOutPacket();
-					packet.add(DataOutHandler.RAW_HEARTRATE, thisData.getBPM());
-					mDataOutHandler.handleDataOut(packet);					
+					packet.add(DataOutHandlerTags.RAW_HEARTRATE, thisData.getBPM());
+					try {
+						mDataOutHandler.handleDataOut(packet);
+					} catch (DataOutHandlerException e) {
+						Log.e(TAG, e.toString());
+						e.printStackTrace();
+					}					
 					
     				// See if we are configured to update display every time we get sensor data
     				if (mDisplaySampleRate == 9999 && mIsActive) {
@@ -1357,8 +1387,13 @@ public class Graphs1Activity extends BaseActivity implements OnBioFeedbackMessag
 			
 	        // Send data to output
         	DataOutPacket packet = mDataOutHandler.new DataOutPacket();
-			packet.add(DataOutHandler.AVERAGE_RESP_RATE, rrAvg);
-			mDataOutHandler.handleDataOut(packet);
+			packet.add(DataOutHandlerTags.AVERAGE_RESP_RATE, rrAvg);
+			try {
+				mDataOutHandler.handleDataOut(packet);
+			} catch (DataOutHandlerException e) {
+				Log.e(TAG, e.toString());
+				e.printStackTrace();
+			}
 		}
 	};
     	
@@ -1494,7 +1529,12 @@ public class Graphs1Activity extends BaseActivity implements OnBioFeedbackMessag
 					mPauseButton.getBackground().setColorFilter(Color.LTGRAY, PorterDuff.Mode.MULTIPLY);
 					mPauseButton.setText(R.string.button_running);
 					if (mLoggingEnabled) {
-						mDataOutHandler.logNote(getString(R.string.un_paused)); // data header
+						try {
+							mDataOutHandler.logNote(getString(R.string.un_paused));
+						} catch (DataOutHandlerException e) {
+							Log.e(TAG, e.toString());
+							e.printStackTrace();
+						} // data header
 					}        
 					if (mLogCatEnabled) {
 						Log.d(TAG, "Un-Paused" );
@@ -1505,7 +1545,12 @@ public class Graphs1Activity extends BaseActivity implements OnBioFeedbackMessag
 					mPauseButton.getBackground().setColorFilter(0xFFFF0000, PorterDuff.Mode.MULTIPLY);
 					mPauseButton.setText(R.string.button_pause);
 					if (mLoggingEnabled) {
-						mDataOutHandler.logNote(getString(R.string.paused)); // data header
+						try {
+							mDataOutHandler.logNote(getString(R.string.paused));
+						} catch (DataOutHandlerException e) {
+							Log.e(TAG, e.toString());
+							e.printStackTrace();
+						} // data header
 					}
 					if (mLogCatEnabled) {
 						Log.d(TAG, "Paused" );

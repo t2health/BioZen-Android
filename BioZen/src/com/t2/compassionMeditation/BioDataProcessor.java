@@ -34,11 +34,14 @@ package com.t2.compassionMeditation;
 
 import org.t2health.lib1.DataOutHandler;
 import org.t2health.lib1.DataOutHandler.DataOutPacket;
+import org.t2health.lib1.DataOutHandlerException;
+import org.t2health.lib1.DataOutHandlerTags;
 import org.t2health.lib1.dsp.T2FPeriodAverageFilter;
 import org.t2health.lib1.dsp.T2MovingAverageFilter;
 import org.t2health.lib1.dsp.T2PeriodAverageFilter;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.oregondsp.signalProcessing.filter.iir.ChebyshevI;
 import com.oregondsp.signalProcessing.filter.iir.PassbandType;
@@ -63,6 +66,8 @@ import spine.datamodel.ShimmerData;
  *
  */
 public class BioDataProcessor {
+	
+	private static final String TAG = BioDataProcessor.class.getSimpleName();
 	private final int GSR_PERIOD_SAMPLE_SECONDS = 1; 
 	private final int HEARTRATE_PERIOD_SAMPLE_SECONDS = 3; 
 	private final int RESPRATE_PERIOD_SAMPLE_SECONDS = 10; 
@@ -121,9 +126,14 @@ public class BioDataProcessor {
 		
 		// Send data to output
 		DataOutPacket packet = mDataOutHandler.new DataOutPacket();
-		packet.add(DataOutHandler.SENSOR_TIME_STAMP, shimmerData.timestamp);
-		packet.add(DataOutHandler.RAW_GSR, mGsrConductance, "%2.4f");
-		mDataOutHandler.handleDataOut(packet);
+		packet.add(DataOutHandlerTags.SENSOR_TIME_STAMP, shimmerData.timestamp);
+		packet.add(DataOutHandlerTags.RAW_GSR, mGsrConductance, "%2.4f");
+		try {
+			mDataOutHandler.handleDataOut(packet);
+		} catch (DataOutHandlerException e) {
+			Log.e(TAG, e.toString());
+			e.printStackTrace();
+		}
 		
 		// Handle logging of average GSR every 1 second
 		double mGgsrAvg = mGsrPeriodAverage.filter(mGsrConductance);
@@ -131,8 +141,13 @@ public class BioDataProcessor {
 			// We get here once every second
 	        // Send data to output
 			packet = mDataOutHandler.new DataOutPacket();
-			packet.add(DataOutHandler.AVERAGE_GSR, mGgsrAvg, "%2.4f");
-			mDataOutHandler.handleDataOut(packet);
+			packet.add(DataOutHandlerTags.AVERAGE_GSR, mGgsrAvg, "%2.4f");
+			try {
+				mDataOutHandler.handleDataOut(packet);
+			} catch (DataOutHandlerException e) {
+				Log.e(TAG, e.toString());
+				e.printStackTrace();
+			}
 		}
 	} // End processShimmerGSR(ShimmerData shimmerData, int configuredGSRRange)
 	
@@ -145,9 +160,14 @@ public class BioDataProcessor {
 	public void processShimmerEMGData(ShimmerData shimmerData) {
         // Send data to output
 		DataOutPacket packet = mDataOutHandler.new DataOutPacket();
-		packet.add(DataOutHandler.SENSOR_TIME_STAMP, shimmerData.timestamp);
-		packet.add(DataOutHandler.RAW_EMG, shimmerData.emg);
-		mDataOutHandler.handleDataOut(packet);						
+		packet.add(DataOutHandlerTags.SENSOR_TIME_STAMP, shimmerData.timestamp);
+		packet.add(DataOutHandlerTags.RAW_EMG, shimmerData.emg);
+		try {
+			mDataOutHandler.handleDataOut(packet);
+		} catch (DataOutHandlerException e) {
+			Log.e(TAG, e.toString());
+			e.printStackTrace();
+		}						
 	}
 	
 	/**
@@ -195,19 +215,29 @@ public class BioDataProcessor {
 		
         // Send data to output
 		DataOutPacket packet = mDataOutHandler.new DataOutPacket();
-		packet.add(DataOutHandler.SENSOR_TIME_STAMP, shimmerData.timestamp);
-		packet.add(DataOutHandler.RAW_ECG, mRawEcg);
-		packet.add(DataOutHandler.FILTERED_ECG, (int) mBaselineFiltered);
-		packet.add(DataOutHandler.RAW_HEARTRATE, mShimmerHeartRate);
-		mDataOutHandler.handleDataOut(packet);						
+		packet.add(DataOutHandlerTags.SENSOR_TIME_STAMP, shimmerData.timestamp);
+		packet.add(DataOutHandlerTags.RAW_ECG, mRawEcg);
+		packet.add(DataOutHandlerTags.FILTERED_ECG, (int) mBaselineFiltered);
+		packet.add(DataOutHandlerTags.RAW_HEARTRATE, mShimmerHeartRate);
+		try {
+			mDataOutHandler.handleDataOut(packet);
+		} catch (DataOutHandlerException e) {
+			Log.e(TAG, e.toString());
+			e.printStackTrace();
+		}						
 		
 		int hrAvg = mHeartRatePeriodAverage.filter(mShimmerHeartRate);
 		if (hrAvg != T2PeriodAverageFilter.AVERAGING) {
 			// We get here once every 3 seconds
 	        // Send data to output
 			packet = mDataOutHandler.new DataOutPacket();
-			packet.add(DataOutHandler.AVERAGE_HEARTRATE, hrAvg);
-			mDataOutHandler.handleDataOut(packet);
+			packet.add(DataOutHandlerTags.AVERAGE_HEARTRATE, hrAvg);
+			try {
+				mDataOutHandler.handleDataOut(packet);
+			} catch (DataOutHandlerException e) {
+				Log.e(TAG, e.toString());
+				e.printStackTrace();
+			}
 		}		
 	
 	} // End processShimmerECG(ShimmerData shimmerData)
@@ -233,10 +263,15 @@ public class BioDataProcessor {
 		
         // Send data to output
 		DataOutPacket packet = mDataOutHandler.new DataOutPacket();
-		packet.add(DataOutHandler.RAW_HEARTRATE, mZephyrHeartRate);
-		packet.add(DataOutHandler.RAW_RESP_RATE, (int) mRespRate);
-		packet.add(DataOutHandler.RAW_SKINTEMP, mSkinTempF, "%2.1f");
-		mDataOutHandler.handleDataOut(packet);				
+		packet.add(DataOutHandlerTags.RAW_HEARTRATE, mZephyrHeartRate);
+		packet.add(DataOutHandlerTags.RAW_RESP_RATE, (int) mRespRate);
+		packet.add(DataOutHandlerTags.RAW_SKINTEMP, mSkinTempF, "%2.1f");
+		try {
+			mDataOutHandler.handleDataOut(packet);
+		} catch (DataOutHandlerException e) {
+			Log.e(TAG, e.toString());
+			e.printStackTrace();
+		}				
 		
 	} // End processZephyr(ShimmerData shimmerData)
 	
@@ -262,8 +297,13 @@ public class BioDataProcessor {
 			
 	        // Send data to output
 			DataOutPacket packet = mDataOutHandler.new DataOutPacket();
-			packet.add(DataOutHandler.EEG_SPECTRAL, logDataLine);
-			mDataOutHandler.handleDataOut(packet);				
+			packet.add(DataOutHandlerTags.EEG_SPECTRAL, logDataLine);
+			try {
+				mDataOutHandler.handleDataOut(packet);
+			} catch (DataOutHandlerException e) {
+				Log.e(TAG, e.toString());
+				e.printStackTrace();
+			}				
 		}
 		if (mindsetData.exeCode == Constants.EXECODE_POOR_SIG_QUALITY) {
 			
@@ -271,8 +311,13 @@ public class BioDataProcessor {
 			
 	        // Send data to output
     		DataOutPacket packet = mDataOutHandler.new DataOutPacket();
-			packet.add(DataOutHandler.EEG_SIG_STRENGTH, mindsetData.poorSignalStrength);
-			mDataOutHandler.handleDataOut(packet);
+			packet.add(DataOutHandlerTags.EEG_SIG_STRENGTH, mindsetData.poorSignalStrength);
+			try {
+				mDataOutHandler.handleDataOut(packet);
+			} catch (DataOutHandlerException e) {
+				Log.e(TAG, e.toString());
+				e.printStackTrace();
+			}
 		}
 		if (mindsetData.exeCode == Constants.EXECODE_ATTENTION) {
 
@@ -280,15 +325,25 @@ public class BioDataProcessor {
 			
 	        // Send data to output
     		DataOutPacket packet = mDataOutHandler.new DataOutPacket();
-			packet.add(DataOutHandler.EEG_ATTENTION, mindsetData.attention);
-			mDataOutHandler.handleDataOut(packet);
+			packet.add(DataOutHandlerTags.EEG_ATTENTION, mindsetData.attention);
+			try {
+				mDataOutHandler.handleDataOut(packet);
+			} catch (DataOutHandlerException e) {
+				Log.e(TAG, e.toString());
+				e.printStackTrace();
+			}
 		}
 		if (mindsetData.exeCode == Constants.EXECODE_MEDITATION) {						
 			currentMindsetData.meditation= mindsetData.meditation;
 	        // Send data to output
     		DataOutPacket packet = mDataOutHandler.new DataOutPacket();
-			packet.add(DataOutHandler.EEG_MEDITATION, mindsetData.meditation);
-			mDataOutHandler.handleDataOut(packet);
+			packet.add(DataOutHandlerTags.EEG_MEDITATION, mindsetData.meditation);
+			try {
+				mDataOutHandler.handleDataOut(packet);
+			} catch (DataOutHandlerException e) {
+				Log.e(TAG, e.toString());
+				e.printStackTrace();
+			}
 		}						
 	} // End processMindsetData(Data data, MindsetData currentMindsetData)
 }

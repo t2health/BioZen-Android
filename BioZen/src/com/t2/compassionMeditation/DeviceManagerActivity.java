@@ -85,9 +85,11 @@ import com.t2.SpineReceiver;
 import com.t2.SpineReceiver.BioFeedbackStatus;
 import com.t2.SpineReceiver.OnBioFeedbackMessageRecievedListener;
 import com.t2.biofeedback.BioFeedbackService;
-import com.t2.biofeedback.R;
+import com.t2.R;
 import com.t2.compassionUtils.BioSensor;
 import com.t2.compassionUtils.Util;
+
+
 
 /**
  * Activity used to manually administer list of available devices.

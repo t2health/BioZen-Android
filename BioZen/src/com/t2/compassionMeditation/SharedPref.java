@@ -36,7 +36,7 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import com.t2.biofeedback.R;
+import com.t2.R;
 
 import android.content.Context;
 import android.content.SharedPreferences;
