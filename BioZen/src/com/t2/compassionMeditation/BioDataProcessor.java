@@ -32,10 +32,6 @@ visit http://www.opensource.org/licenses/EPL-1.0
 *****************************************************************/
 package com.t2.compassionMeditation;
 
-import org.t2health.lib1.DataOutHandler;
-import org.t2health.lib1.DataOutHandler.DataOutPacket;
-import org.t2health.lib1.DataOutHandlerException;
-import org.t2health.lib1.DataOutHandlerTags;
 import org.t2health.lib1.dsp.T2FPeriodAverageFilter;
 import org.t2health.lib1.dsp.T2MovingAverageFilter;
 import org.t2health.lib1.dsp.T2PeriodAverageFilter;
@@ -47,6 +43,10 @@ import com.oregondsp.signalProcessing.filter.iir.ChebyshevI;
 import com.oregondsp.signalProcessing.filter.iir.PassbandType;
 import com.t2.Constants;
 import com.t2.compassionUtils.Util;
+import com.t2.dataouthandler.DataOutHandler;
+import com.t2.dataouthandler.DataOutHandler.DataOutPacket;
+import com.t2.dataouthandler.DataOutHandlerException;
+import com.t2.dataouthandler.DataOutHandlerTags;
 
 import spine.datamodel.Data;
 import spine.datamodel.Feature;

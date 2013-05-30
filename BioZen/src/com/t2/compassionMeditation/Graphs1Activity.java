@@ -58,10 +58,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.t2health.lib1.BioParameter;
 import org.t2health.lib1.BioSensor;
-import org.t2health.lib1.DataOutHandler;
-import org.t2health.lib1.DataOutHandler.DataOutPacket;
-import org.t2health.lib1.DataOutHandlerException;
-import org.t2health.lib1.DataOutHandlerTags;
 
 import spine.SPINEFactory;
 import spine.SPINEFunctionConstants;
@@ -127,6 +123,10 @@ import com.t2.antlib.AntPlusManager;
 import com.t2.biofeedback.device.shimmer.ShimmerDevice;
 import com.t2.compassionUtils.MathExtra;
 import com.t2.compassionUtils.Util;
+import com.t2.dataouthandler.DataOutHandler;
+import com.t2.dataouthandler.DataOutHandler.DataOutPacket;
+import com.t2.dataouthandler.DataOutHandlerException;
+import com.t2.dataouthandler.DataOutHandlerTags;
 import com.t2.t2sensorlib.BigBrotherService;
 
 
