@@ -44,9 +44,9 @@ import com.oregondsp.signalProcessing.filter.iir.PassbandType;
 import com.t2.Constants;
 import com.t2.compassionUtils.Util;
 import com.t2.dataouthandler.DataOutHandler;
-import com.t2.dataouthandler.DataOutHandler.DataOutPacket;
 import com.t2.dataouthandler.DataOutHandlerException;
 import com.t2.dataouthandler.DataOutHandlerTags;
+import com.t2.dataouthandler.DataOutPacket;
 
 import spine.datamodel.Data;
 import spine.datamodel.Feature;
@@ -125,7 +125,7 @@ public class BioDataProcessor {
 		mGsrConductance = (1F / (float) mGsrResistance) * 1000000;
 		
 		// Send data to output
-		DataOutPacket packet = mDataOutHandler.new DataOutPacket();
+		DataOutPacket packet = new DataOutPacket();
 		packet.add(DataOutHandlerTags.SENSOR_TIME_STAMP, shimmerData.timestamp);
 		packet.add(DataOutHandlerTags.RAW_GSR, mGsrConductance, "%2.4f");
 		try {
@@ -140,7 +140,7 @@ public class BioDataProcessor {
 		if (mGgsrAvg != T2FPeriodAverageFilter.AVERAGING) {
 			// We get here once every second
 	        // Send data to output
-			packet = mDataOutHandler.new DataOutPacket();
+			packet = new DataOutPacket();
 			packet.add(DataOutHandlerTags.AVERAGE_GSR, mGgsrAvg, "%2.4f");
 			try {
 				mDataOutHandler.handleDataOut(packet);
@@ -159,7 +159,7 @@ public class BioDataProcessor {
 	 */	
 	public void processShimmerEMGData(ShimmerData shimmerData) {
         // Send data to output
-		DataOutPacket packet = mDataOutHandler.new DataOutPacket();
+		DataOutPacket packet = new DataOutPacket();
 		packet.add(DataOutHandlerTags.SENSOR_TIME_STAMP, shimmerData.timestamp);
 		packet.add(DataOutHandlerTags.RAW_EMG, shimmerData.emg);
 		try {
@@ -214,7 +214,7 @@ public class BioDataProcessor {
 		}		
 		
         // Send data to output
-		DataOutPacket packet = mDataOutHandler.new DataOutPacket();
+		DataOutPacket packet = new DataOutPacket();
 		packet.add(DataOutHandlerTags.SENSOR_TIME_STAMP, shimmerData.timestamp);
 		packet.add(DataOutHandlerTags.RAW_ECG, mRawEcg);
 		packet.add(DataOutHandlerTags.FILTERED_ECG, (int) mBaselineFiltered);
@@ -230,7 +230,7 @@ public class BioDataProcessor {
 		if (hrAvg != T2PeriodAverageFilter.AVERAGING) {
 			// We get here once every 3 seconds
 	        // Send data to output
-			packet = mDataOutHandler.new DataOutPacket();
+			packet = new DataOutPacket();
 			packet.add(DataOutHandlerTags.AVERAGE_HEARTRATE, hrAvg);
 			try {
 				mDataOutHandler.handleDataOut(packet);
@@ -262,7 +262,7 @@ public class BioDataProcessor {
 		
 		
         // Send data to output
-		DataOutPacket packet = mDataOutHandler.new DataOutPacket();
+		DataOutPacket packet = new DataOutPacket();
 		packet.add(DataOutHandlerTags.RAW_HEARTRATE, mZephyrHeartRate);
 		packet.add(DataOutHandlerTags.RAW_RESP_RATE, (int) mRespRate);
 		packet.add(DataOutHandlerTags.RAW_SKINTEMP, mSkinTempF, "%2.1f");
@@ -296,7 +296,7 @@ public class BioDataProcessor {
 			String logDataLine = currentMindsetData.getLogDataLine();
 			
 	        // Send data to output
-			DataOutPacket packet = mDataOutHandler.new DataOutPacket();
+			DataOutPacket packet = new DataOutPacket();
 			packet.add(DataOutHandlerTags.EEG_SPECTRAL, logDataLine);
 			try {
 				mDataOutHandler.handleDataOut(packet);
@@ -310,7 +310,7 @@ public class BioDataProcessor {
 			currentMindsetData.poorSignalStrength = mindsetData.poorSignalStrength;
 			
 	        // Send data to output
-    		DataOutPacket packet = mDataOutHandler.new DataOutPacket();
+    		DataOutPacket packet = new DataOutPacket();
 			packet.add(DataOutHandlerTags.EEG_SIG_STRENGTH, mindsetData.poorSignalStrength);
 			try {
 				mDataOutHandler.handleDataOut(packet);
@@ -324,7 +324,7 @@ public class BioDataProcessor {
 			currentMindsetData.attention= mindsetData.attention;
 			
 	        // Send data to output
-    		DataOutPacket packet = mDataOutHandler.new DataOutPacket();
+    		DataOutPacket packet = new DataOutPacket();
 			packet.add(DataOutHandlerTags.EEG_ATTENTION, mindsetData.attention);
 			try {
 				mDataOutHandler.handleDataOut(packet);
@@ -336,7 +336,7 @@ public class BioDataProcessor {
 		if (mindsetData.exeCode == Constants.EXECODE_MEDITATION) {						
 			currentMindsetData.meditation= mindsetData.meditation;
 	        // Send data to output
-    		DataOutPacket packet = mDataOutHandler.new DataOutPacket();
+    		DataOutPacket packet = new DataOutPacket();
 			packet.add(DataOutHandlerTags.EEG_MEDITATION, mindsetData.meditation);
 			try {
 				mDataOutHandler.handleDataOut(packet);

@@ -74,9 +74,9 @@ import com.t2.compassionUtils.TMovingAverageFilter;
 import com.t2.compassionUtils.RateOfChange;
 import com.t2.compassionUtils.Util;
 import com.t2.dataouthandler.DataOutHandler;
-import com.t2.dataouthandler.DataOutHandler.DataOutPacket;
 import com.t2.dataouthandler.DataOutHandlerException;
 import com.t2.dataouthandler.DataOutHandlerTags;
+import com.t2.dataouthandler.DataOutPacket;
 import com.t2.t2sensorlib.BigBrotherService;
 
 import com.t2.Constants;
@@ -795,7 +795,7 @@ public class MeditationActivity extends BaseActivity
 			mApplicationVersion = info.versionName;
 			String versionString = mAppId + " application version: " + mApplicationVersion;
 
-			DataOutPacket packet = mDataOutHandler.new DataOutPacket();
+			DataOutPacket packet = new DataOutPacket();
 			packet.add(DataOutHandlerTags.version, versionString);
 			try {
 				mDataOutHandler.handleDataOut(packet);
@@ -1121,7 +1121,7 @@ public class MeditationActivity extends BaseActivity
 					mBioParameters.get(eHealthGSRPos).rawValue = (int) map(scaledConductance,0,65535,0,100);
 					mBioParameters.get(eHealthGSRPos).setScaledValue((int)((double)  map(scaledConductance,0,65535,0,255) * mAlphaGain));
 				
-					DataOutPacket packet = mDataOutHandler.new DataOutPacket();
+					DataOutPacket packet = new DataOutPacket();
 					packet.add(DataOutHandlerTags.RAW_HEARTRATE, BPM);
 					packet.add(DataOutHandlerTags.RAW_GSR, conductance);
 					packet.add(DataOutHandlerTags.RAW_SKINTEMP, temp);
@@ -1151,7 +1151,7 @@ public class MeditationActivity extends BaseActivity
 					}
 					
 			        // Send data to output
-					DataOutPacket packet = mDataOutHandler.new DataOutPacket();
+					DataOutPacket packet = new DataOutPacket();
 					packet.add(DataOutHandlerTags.RAW_HEARTRATE, thisData.getBPM());
 					try {
 						mDataOutHandler.handleDataOut(packet);

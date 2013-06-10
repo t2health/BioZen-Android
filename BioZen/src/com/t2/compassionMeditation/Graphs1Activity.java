@@ -124,9 +124,9 @@ import com.t2.biofeedback.device.shimmer.ShimmerDevice;
 import com.t2.compassionUtils.MathExtra;
 import com.t2.compassionUtils.Util;
 import com.t2.dataouthandler.DataOutHandler;
-import com.t2.dataouthandler.DataOutHandler.DataOutPacket;
 import com.t2.dataouthandler.DataOutHandlerException;
 import com.t2.dataouthandler.DataOutHandlerTags;
+import com.t2.dataouthandler.DataOutPacket;
 import com.t2.t2sensorlib.BigBrotherService;
 
 
@@ -395,7 +395,7 @@ public class Graphs1Activity extends BaseActivity implements OnBioFeedbackMessag
 			mApplicationVersion = info.versionName;
 			String versionString = mAppId + " application version: " + mApplicationVersion;
 
-			DataOutPacket packet = mDataOutHandler.new DataOutPacket();
+			DataOutPacket packet = new DataOutPacket();
 			packet.add(DataOutHandlerTags.version, versionString);
 			try {
 				mDataOutHandler.handleDataOut(packet);
@@ -993,7 +993,7 @@ public class Graphs1Activity extends BaseActivity implements OnBioFeedbackMessag
 					mBioParameters.get(eHealthGSRPos).rawValue = (int) map(scaledConductance,0,65535,0,100);
 					mBioParameters.get(eHealthGSRPos).scaledValue = (int) map(scaledConductance,0,65535,0,100);;
 				
-					DataOutPacket packet = mDataOutHandler.new DataOutPacket();
+					DataOutPacket packet = new DataOutPacket();
 					packet.add(DataOutHandlerTags.RAW_HEARTRATE, BPM);
 					packet.add(DataOutHandlerTags.RAW_GSR, conductance);
 					packet.add(DataOutHandlerTags.RAW_SKINTEMP, temp);
@@ -1029,7 +1029,7 @@ public class Graphs1Activity extends BaseActivity implements OnBioFeedbackMessag
 					}
 					
 			        // Send data to output
-					DataOutPacket packet = mDataOutHandler.new DataOutPacket();
+					DataOutPacket packet = new DataOutPacket();
 					packet.add(DataOutHandlerTags.RAW_HEARTRATE, thisData.getBPM());
 					try {
 						mDataOutHandler.handleDataOut(packet);
@@ -1386,7 +1386,7 @@ public class Graphs1Activity extends BaseActivity implements OnBioFeedbackMessag
         	}			
 			
 	        // Send data to output
-        	DataOutPacket packet = mDataOutHandler.new DataOutPacket();
+        	DataOutPacket packet = new DataOutPacket();
 			packet.add(DataOutHandlerTags.AVERAGE_RESP_RATE, rrAvg);
 			try {
 				mDataOutHandler.handleDataOut(packet);
