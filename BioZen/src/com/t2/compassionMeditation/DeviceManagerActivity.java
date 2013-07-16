@@ -196,7 +196,7 @@ public class DeviceManagerActivity extends Activity
 								  }
 
 								});
-							alertWarning.setNegativeButton("Ignore", new DialogInterface.OnClickListener() {
+							alertWarning.setNegativeButton("Select Anyway", new DialogInterface.OnClickListener() {
 								  public void onClick(DialogInterface dialog, int whichButton) {
 							        	Log.d(TAG, "param name = " + name + ", address = " + address);
 							        	if (which != 0) {
