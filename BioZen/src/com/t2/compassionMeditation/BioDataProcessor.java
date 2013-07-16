@@ -132,7 +132,7 @@ public class BioDataProcessor {
 			mDataOutHandler.handleDataOut(packet);
 		} catch (DataOutHandlerException e) {
 			Log.e(TAG, e.toString());
-			e.printStackTrace();
+//			e.printStackTrace();
 		}
 		
 		// Handle logging of average GSR every 1 second
@@ -146,7 +146,7 @@ public class BioDataProcessor {
 				mDataOutHandler.handleDataOut(packet);
 			} catch (DataOutHandlerException e) {
 				Log.e(TAG, e.toString());
-				e.printStackTrace();
+//				e.printStackTrace();
 			}
 		}
 	} // End processShimmerGSR(ShimmerData shimmerData, int configuredGSRRange)
@@ -166,7 +166,7 @@ public class BioDataProcessor {
 			mDataOutHandler.handleDataOut(packet);
 		} catch (DataOutHandlerException e) {
 			Log.e(TAG, e.toString());
-			e.printStackTrace();
+//			e.printStackTrace();
 		}						
 	}
 	
@@ -223,7 +223,7 @@ public class BioDataProcessor {
 			mDataOutHandler.handleDataOut(packet);
 		} catch (DataOutHandlerException e) {
 			Log.e(TAG, e.toString());
-			e.printStackTrace();
+//			e.printStackTrace();
 		}						
 		
 		int hrAvg = mHeartRatePeriodAverage.filter(mShimmerHeartRate);
@@ -236,7 +236,7 @@ public class BioDataProcessor {
 				mDataOutHandler.handleDataOut(packet);
 			} catch (DataOutHandlerException e) {
 				Log.e(TAG, e.toString());
-				e.printStackTrace();
+//				e.printStackTrace();
 			}
 		}		
 	
@@ -270,7 +270,7 @@ public class BioDataProcessor {
 			mDataOutHandler.handleDataOut(packet);
 		} catch (DataOutHandlerException e) {
 			Log.e(TAG, e.toString());
-			e.printStackTrace();
+//			e.printStackTrace();
 		}				
 		
 	} // End processZephyr(ShimmerData shimmerData)
@@ -302,7 +302,7 @@ public class BioDataProcessor {
 				mDataOutHandler.handleDataOut(packet);
 			} catch (DataOutHandlerException e) {
 				Log.e(TAG, e.toString());
-				e.printStackTrace();
+//				e.printStackTrace();
 			}				
 		}
 		if (mindsetData.exeCode == Constants.EXECODE_POOR_SIG_QUALITY) {
@@ -316,7 +316,7 @@ public class BioDataProcessor {
 				mDataOutHandler.handleDataOut(packet);
 			} catch (DataOutHandlerException e) {
 				Log.e(TAG, e.toString());
-				e.printStackTrace();
+//				e.printStackTrace();
 			}
 		}
 		if (mindsetData.exeCode == Constants.EXECODE_ATTENTION) {
@@ -330,7 +330,7 @@ public class BioDataProcessor {
 				mDataOutHandler.handleDataOut(packet);
 			} catch (DataOutHandlerException e) {
 				Log.e(TAG, e.toString());
-				e.printStackTrace();
+//				e.printStackTrace();
 			}
 		}
 		if (mindsetData.exeCode == Constants.EXECODE_MEDITATION) {						
@@ -342,7 +342,7 @@ public class BioDataProcessor {
 				mDataOutHandler.handleDataOut(packet);
 			} catch (DataOutHandlerException e) {
 				Log.e(TAG, e.toString());
-				e.printStackTrace();
+//				e.printStackTrace();
 			}
 		}						
 	} // End processMindsetData(Data data, MindsetData currentMindsetData)

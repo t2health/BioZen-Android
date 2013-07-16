@@ -1003,7 +1003,7 @@ public class Graphs1Activity extends BaseActivity implements OnBioFeedbackMessag
 						mDataOutHandler.handleDataOut(packet);
 					} catch (DataOutHandlerException e) {
 						Log.e(TAG, e.toString());
-						e.printStackTrace();
+//						e.printStackTrace();
 					}						
 					
 					
@@ -1035,7 +1035,7 @@ public class Graphs1Activity extends BaseActivity implements OnBioFeedbackMessag
 						mDataOutHandler.handleDataOut(packet);
 					} catch (DataOutHandlerException e) {
 						Log.e(TAG, e.toString());
-						e.printStackTrace();
+//						e.printStackTrace();
 					}					
 					
     				// See if we are configured to update display every time we get sensor data
@@ -1392,7 +1392,7 @@ public class Graphs1Activity extends BaseActivity implements OnBioFeedbackMessag
 				mDataOutHandler.handleDataOut(packet);
 			} catch (DataOutHandlerException e) {
 				Log.e(TAG, e.toString());
-				e.printStackTrace();
+//				e.printStackTrace();
 			}
 		}
 	};
